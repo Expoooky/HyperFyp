@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Blogs";
+    Layout = "~/Views/Home/_HomeLayout.cshtml";
+}
+<div class="underconstruction">
+    <i class='bx bxs-hard-hat'></i>
+    <h3>UNDER CONSTRUCTION</h3>
+</div>
+<script>
+    window.addEventListener('load', function () {
+        const dashboardLink = document.getElementById('blogs');
+        if (dashboardLink) {
+            dashboardLink.classList.add('active');
+        }
+
+        const allLinks = document.querySelectorAll('.link');
+        allLinks.forEach(link => {
+            if (link !== dashboardLink) {
+                link.classList.remove('active');
+            }
+        });
+    });
+</script>
+

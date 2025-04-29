@@ -1,0 +1,204 @@
+﻿
+@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+<style>
+    .account-settings-parent {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 10px;
+        gap: 30px;
+        color: black;
+    }
+
+    .account-settings-child {
+        display: flex;
+        flex-direction: column;
+        width: 800px;
+        padding: 10px 5px;
+    }
+
+    .account-settings-grandchildren {
+        padding: 20px 0px;
+        background-color: #fafffb;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+    }
+
+    .separator {
+        padding: 10px 30px;
+    }
+
+    .separator-2 {
+        padding: 10px 30px;
+    }
+
+    .avtr-wlcm {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+
+        .avtr-wlcm img {
+            height: 125px;
+            width: 125px;
+            border-radius: 50%;
+            border: 3px solid #d1fed1;
+        }
+
+    .inputbox {
+        margin: 5px 5px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+        .inputbox label {
+            position: absolute;
+            top: -10px;
+            left: 5px;
+            color: #000000;
+            font-size: 1em;
+            pointer-events: none;
+            transition: .2s;
+        }
+
+        .inputbox input {
+            width: 250px; /* Initial width */
+            max-width: 300px; /* Maximum width */
+            padding: 10px;
+            border: none;
+            outline: none;
+            border-bottom: 2px solid #dcdcdc;
+            border-radius: 15px;
+            font-size: 14px;
+            background-color: #eefbef;
+            box-sizing: border-box;
+        }
+
+            .inputbox input:focus + label, .inputbox input:not(:placeholder-shown) + label {
+                bottom: 50px;
+                font-size: 14px;
+                color: #333;
+            }
+
+            .inputbox input:focus, .inputbox input:not(:placeholder-shown) {
+                border-bottom-color: #00c704;
+            }
+
+    .login-button {
+        display: flex;
+        justify-content: center;
+    }
+
+    .settings-button {
+        width: 90px;
+        height: 30px;
+        border-radius: 35px;
+        background-color: #43a745;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        color: #ffffff;
+        transition: background-color 0.4s ease;
+    }
+
+    .settings-button:hover {
+        background-color: #153516;
+    }
+</style>
+<section class="account-settings-parent">
+    <div class="account-settings-child">
+        <h1 style="margin-bottom: 10px;">Account Settings</h1>
+        <div class="account-settings-grandchildren">
+            <div class="separator">
+                <div>
+                    <h3>Email</h3>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; column-gap: 15px; ">
+                    <div class="inputbox">
+                        <input name="email" type="email" value="@Session["UserEmail"]" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="separator-2">
+                @using (Html.BeginForm("Change_Password", "Admin", FormMethod.Post))
+                {
+                    <div>
+                        <h3>Change Password</h3>
+                    </div>
+                    <div class="inputbox">
+                        @Html.TextBox("currentPassword", null, new { @id = "currentPassword", @placeholder = "Current Password", @type = "password", @required = "required" })
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; align-items: center; column-gap: 15px; ">
+                        <div style="display: flex; flex-wrap: wrap; align-items: center;">
+                            <div class="inputbox">
+                                @Html.TextBox("newPassword", null, new { @id = "newPassword", @placeholder = "New Password", @type = "password", @oninput = "validatePasswordInput()", @required = "required" })
+                            </div>
+                            <div class="inputbox">
+                                @Html.TextBox("newConfirmPassword", null, new { @id = "newConfirmPassword", @placeholder = "Confirm Password", @type = "password", @oninput = "validateConfirmPasswordOnInput()", @required = "required" })
+                            </div>
+                        </div>
+                        <button type="submit" class="settings-button">Save</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+    function validatePasswordInput() {
+        var passwordInput = document.getElementById("newPassword");
+        var password = passwordInput.value;
+        var minLength = 8;
+        var minSpecialChars = 2;
+        var specialChars = /[!@@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+        var hasNumber = /\d/;
+        var hasCapitalLetter = /[A-Z]/;
+
+        if (password.length < minLength) {
+            passwordInput.setCustomValidity("Password must be at least 8 characters long");
+            passwordInput.style.borderColor = "red";
+        } else if (!specialChars.test(password) || (password.match(/[^a-zA-Z0-9]/g) || []).length < minSpecialChars) {
+            passwordInput.setCustomValidity("Password must contain at least 2 special characters");
+            passwordInput.style.borderColor = "red";
+        } else if (!hasNumber.test(password)) {
+            passwordInput.setCustomValidity("Password must contain at least one number");
+            passwordInput.style.borderColor = "red";
+        } else if (!hasCapitalLetter.test(password)) {
+            passwordInput.setCustomValidity("Password must contain at least one capital letter");
+            passwordInput.style.borderColor = "red";
+        } else {
+            passwordInput.setCustomValidity("");
+            passwordInput.style.borderColor = "#9a00c7"; // Reset border color
+        }
+    }
+
+    function validateConfirmPasswordOnInput() {
+        var confirmInput = document.getElementById("newConfirmPassword");
+
+        // Prevent pasted characters
+        confirmInput.onpaste = function (e) {
+            e.preventDefault();
+        };
+
+        // Check if passwords match
+        var password = document.getElementById("newPassword").value;
+        var confirmPassword = confirmInput.value;
+
+        if (password !== confirmPassword) {
+            confirmInput.style.borderColor = "red";
+            confirmInput.setCustomValidity("Passwords do not match");
+        } else {
+            confirmInput.style.borderColor = "#9a00c7";
+            confirmInput.setCustomValidity("");
+        }
+    }
+</script>

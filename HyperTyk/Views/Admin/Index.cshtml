@@ -1,0 +1,295 @@
+﻿
+@{
+    ViewBag.Title = "User Account Management";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        table thead {
+            background-color: #034b0093;
+        }
+
+            table thead tr {
+            }
+
+                table thead tr th {
+                    font-size: 14px;
+                    letter-spacing: 0.35px;
+                    padding: 5px;
+                    text-align: start;
+                }
+
+        table tbody tr td {
+            font-size: 14px;
+            letter-spacing: 0.35px;
+            background-color: #809d813f;
+            padding: 8px;
+            text-align: start;
+            transition: all 0.15s ease-in-out;
+        }
+
+        table tbody tr:hover td {
+            color: black;
+            background-color: #ffffff3f;
+        }
+
+    .ban {
+        background-color: #ff0000cf;
+    }
+
+    .unban {
+        background-color: #0ab00493;
+    }
+
+    .add-coin {
+        background-color: #229700;
+    }
+
+    .de-coin {
+        background-color: #d77000;
+    }
+
+    .view-details {
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: color 0.15s ease;
+        text-decoration: underline ;
+    }
+
+        .view-details:hover {
+            color: #00709b;
+        }
+</style>
+<h1>User Account Management (Normal)</h1>
+<div class="container">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Banned?</th>
+                    <th>Verified?</th>
+                    <th>Email Address (More Info)</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Creation Date</th>
+                    <th>Action(s)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var user in Model)
+                    {
+                        if (user.Email != User.Identity.Name)
+                        {
+                            <tr>
+                                <td data-label="is Banned?">@((@user.IsBanned == 1) ? "YES" : (@user.IsBanned == 0) ? "NO" : "Unknown")</td>
+                                <td data-label="is Verified?">@((@user.Isverified == 1) ? "YES" : (@user.Isverified == 0) ? "NO" : "Unknown")</td>
+                                <td data-label="Email Address">@user.Email <a class="view-details" data-identity="@user.Id">[Expand]</a></td>
+                                <td data-label="Username">@user.Username</td>
+                                <td data-label="Role">@user.Usertype</td>
+                                <td data-label="Created At">@user.DateCreated.ToString("MMMM d, yyyy")</td>
+                                <td data-label="Action(s)">
+                                    @if (user.IsBanned == 0)
+                                    {
+                                        <button class="ban" id="btn" data-userid="@user.Id" onclick="banUser(this)">
+                                            <p id="tooltiptext">Ban</p>
+                                            <i style="display: flex; justify-content: center; align-items: center; font-weight: 900" class='bx bx-block'></i>
+                                        </button>
+                                        <button class="add-coin" id="btn" data-userid="@user.Id" onclick="addCoin(this)">
+                                            <p id="tooltiptext">Add Coin</p>
+                                            <i style="display: flex; justify-content: center; align-items: center; font-weight: 900" class='bx bx-plus'></i>
+                                        </button>
+                                        <button class="de-coin" id="btn" data-userid="@user.Id" onclick="deCoin(this)">
+                                            <p id="tooltiptext">Deduct Coin</p>
+                                            <i style="display: flex; justify-content: center; align-items: center; font-weight: 900" class='bx bx-minus'></i>
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button class="unban" id="btn" data-userid="@user.Id" onclick="unbanUser(this)">
+                                            <p id="tooltiptext">Unban</p>
+                                            <i style="display: flex; justify-content: center; align-items: center; font-weight: 900" class='bx bx-reset'></i>
+                                        </button>
+                                        <button class="add-coin" id="btn" data-userid="@user.Id" onclick="addCoin(this)">
+                                            <p id="tooltiptext">Add Coin</p>
+                                            <i style="display: flex; justify-content: center; align-items: center; font-weight: 900" class='bx bx-plus'></i>
+                                        </button>
+                                        <button class="de-coin" id="btn" data-userid="@user.Id" onclick="deCoin(this)">
+                                            <p id="tooltiptext">Deduct Coin</p>
+                                            <i style="display: flex; justify-content: center; align-items: center; font-weight: 900" class='bx bx-minus'></i>
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="7" style="text-align: center; padding-left: unset;">No accounts found.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function () {
+        const dashboardLink = document.getElementById('user');
+        if (dashboardLink) {
+            dashboardLink.classList.add('active');
+        }
+
+        const allLinks = document.querySelectorAll('.link');
+        allLinks.forEach(link => {
+            if (link !== dashboardLink) {
+                link.classList.remove('active');
+            }
+        });
+    });
+</script>
+<script>
+    function banUser(button) {
+        var userId = button.dataset.userid;
+
+        // Display a confirmation dialog
+        var confirmation = confirm("Are you sure you want to ban this user?");
+
+        if (confirmation) {
+            // Proceed with the ban operation
+            $.ajax({
+                url: '@Url.Action("Ban", "Admin")',
+                type: 'POST',
+                data: { id: userId },
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert("Error banning user."); // Handle error message from controller (optional)
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error:", textStatus, errorThrown); // Log errors to console
+                    alert("An error occurred. Please try again later."); // User-friendly error message
+                }
+            });
+        }
+    }
+
+    function unbanUser(button) {
+        var userId = button.dataset.userid;
+
+        // Display a confirmation dialog
+        var confirmation = confirm("Are you sure you want to unban this user?");
+
+        if (confirmation) {
+            // Proceed with the unban operation
+            $.ajax({
+                url: '@Url.Action("Unban", "Admin")',
+                type: 'POST',
+                data: { id: userId },
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+                        location.reload();
+                    } else {
+                        alert("Error unbanning user."); // Handle error message from controller (optional)
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error:", textStatus, errorThrown); // Log errors to console
+                    alert("An error occurred. Please try again later."); // User-friendly error message
+                }
+            });
+        }
+    }
+
+    function addCoin(button) {
+        var userId = button.dataset.userid;
+
+        // Prompt the user to enter the amount of coins to add
+        var amountString = prompt("Enter the amount of coins to add :");
+
+        // Check if the user entered a valid number
+        if (amountString !== null) {
+            if (!isNaN(amountString)) {
+                // Parse the entered string as an integer
+                var amount = parseInt(amountString);
+
+                // Proceed with the operation
+                $.ajax({
+                    url: '@Url.Action("AddCoin", "Admin")',
+                    type: 'POST',
+                    data: { id: userId, amount: amount },
+                    success: function (data) {
+                        if (data.success) {
+                            alert(data.message);
+                        } else {
+                            alert(data.message); // Handle error message from controller
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error:", textStatus, errorThrown);
+                        alert("An error occurred. Please try again later.");
+                    }
+                });
+            } else {
+                // Alert the user if the entered amount is invalid
+                alert("Please enter a valid number.");
+            }
+        }
+    }
+
+    function deCoin(button) {
+        var userId = button.dataset.userid;
+
+        // Prompt the user to enter the amount of coins to add
+        var amountString = prompt("Enter the amount of coins to deduct :");
+
+        // Check if the user entered a valid number
+        if (amountString !== null) {
+            if (!isNaN(amountString)) {
+                // Parse the entered string as an integer
+                var amount = parseInt(amountString);
+
+                // Proceed with the operation
+                $.ajax({
+                    url: '@Url.Action("DeductCoin", "Admin")',
+                    type: 'POST',
+                    data: { id: userId, amount: amount },
+                    success: function (data) {
+                        if (data.success) {
+                            alert(data.message);
+                        } else {
+                            alert(data.message); // Handle error message from controller
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.error("Error:", textStatus, errorThrown);
+                        alert("An error occurred. Please try again later.");
+                    }
+                });
+            } else {
+                // Alert the user if the entered amount is invalid
+                alert("Please enter a valid number.");
+            }
+        }
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var elements = document.querySelectorAll('.view-details');
+        elements.forEach(function (element) {
+            element.addEventListener('click', function () {
+                var userId = this.getAttribute('data-identity');
+                window.location.href = '/Admin/Search?userId=' + userId;
+            });
+        });
+    });
+</script>

@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewBag.Title = "Redeem Promo Code";
+    Layout = "~/Views/Home/_HomeLayout.cshtml";
+}
+<style>
+    .redeem-parent {
+        width: 100%;
+        height: 100%;
+        background-color: #ffffff;
+        border-radius: 15px;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: black;
+    }
+
+    .redeem-child {
+        width: 500px;
+        max-width: 100%;
+        background-color: #f7e9fe;
+        border-radius: 20px;
+        padding: 25px;
+        text-align: right;
+    }
+
+    .inputbox {
+        margin: 5px 5px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+        .inputbox label {
+            position: absolute;
+            top: -10px;
+            left: 5px;
+            color: #000000;
+            font-size: 1em;
+            pointer-events: none;
+            transition: .2s;
+        }
+
+        .inputbox input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid #dcdcdc;
+            outline: none;
+            border-radius: 15px;
+            font-size: 14px;
+            background-color: #ffffff;
+            box-sizing: border-box;
+        }
+
+            .inputbox input:focus + label, .inputbox input:not(:placeholder-shown) + label {
+                bottom: 50px;
+                font-size: 14px;
+                color: #333;
+            }
+
+            .inputbox input:focus, .inputbox input:not(:placeholder-shown) {
+                border-bottom-color: #9a00c7;
+            }
+
+    .confirm-button {
+        padding: 10px 25px;
+        border-radius: 35px;
+        background-color: #5b43a7;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: #ffffff;
+        transition: background-color 0.4s ease;
+    }
+
+        .confirm-button:hover {
+            background-color: #1d1535;
+        }
+</style>
+
+<section class="redeem-parent">
+    <h1>Redeem your gift</h1>
+    <br />
+    <div class="redeem-child">
+        @using (Html.BeginForm("RedeemCode", "Home", FormMethod.Post))
+        {
+            <div class="inputbox">
+                <input name="promocode" id="promocode" type="text" placeholder="Code or Pin" required />
+            </div>
+            <br />
+            <button type="submit" class="confirm-button">Redeem</button>
+        }
+    </div>
+</section>
+<div style="padding: 15px; border-radius: 15px; background-color: #2e1b3cd9; color: #e7d1fe">
+    <h3>Paid Ads</h3>
+    <div id="container-308103a62b094028c406e807c8fdd20f"></div>
+</div>
+<script async="async" data-cfasync="false" src="//pl23174326.cpmrevenuegate.com/308103a62b094028c406e807c8fdd20f/invoke.js"></script>
+<script>
+    window.addEventListener('load', function () {
+        const dashboardLink = document.getElementById('rdem');
+        if (dashboardLink) {
+            dashboardLink.classList.add('active');
+        }
+
+        const allLinks = document.querySelectorAll('.link');
+        allLinks.forEach(link => {
+            if (link !== dashboardLink) {
+                link.classList.remove('active');
+            }
+        });
+    });
+</script>
+

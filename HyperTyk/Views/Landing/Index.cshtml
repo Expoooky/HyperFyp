@@ -1,0 +1,201 @@
+﻿@{
+    ViewBag.Title = "HyperFyp";
+    Layout = "~/Views/Landing/_LandingLayout.cshtml";
+}
+<style>
+    .body {
+        width: 100%;
+    }
+
+    .body-2 {
+        height: auto;
+        text-align: center;
+        padding: 50px;
+        display: flex;
+        justify-content: center;
+        background-color: #51007c;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .body-3 {
+        height: 100vh;
+        padding: 70px 15px 20px 15px;
+        display: flex;
+        flex-direction: column;
+        background-color: #51007c;
+    }
+
+    .front-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    a {
+        text-decoration: none;
+        color: white;
+        font-weight: 800;
+    }
+
+    .button {
+        background-color: #df37f1;
+        padding: 10px 20px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+    }
+
+    .pink {
+        background-color: #51007c;
+    }
+
+    .button:hover {
+        box-shadow: 0 0 10px #f6a1ff;
+        background-color: #ce79d8;
+        gap: 10px;
+    }
+
+    .body-2-content {
+        width: 300px;
+        height: 350px;
+        color: black;
+        padding: 10px;
+        background-color: #c789f8bc;
+        display: flex;
+        justify-content: space-evenly;
+        flex-direction: column;
+        border: 3px solid;
+        border-image: linear-gradient(to right, red, cyan);
+        border-image-slice: 1;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out; /* General transitions */
+    }
+
+        .body-2-content:hover {
+            background-color: #51007c;
+            color: #fff;
+            transition: background 0.3s ease-in-out; /* Specific background transition */
+        }
+
+    .text-shadow {
+        position: absolute;
+        right: 2.5px;
+        color: #ff0000ff;
+    }
+
+    .text-shadow-2 {
+        position: absolute;
+        left: 2.5px;
+        color: #00ffde;
+    }
+
+    .text-shadow-3 {
+        position: absolute;
+        left: 0px;
+        color: #000000;
+    }
+
+</style>
+<main class="inside">   
+    <div class="body">
+        <div class="body-1">
+            <h1>Become famous on <span id="typing">Social Media!</span></h1>
+            <h2>Get your free views today!</h2>
+            <h3>FAST, EASY AND FREE!</h3>
+            <br /><br />
+            <div class="front-buttons">
+                <a href="@Url.Action("register", "Landing")" class="button">Start hyping! <i class='bx bx-chevrons-right'></i></a>
+                <a class="button pink">Tips to Grow</a>
+            </div>
+        </div>
+        <div class="body-2">
+            <div class="body-2-content">
+                <div class="body-2-title">
+                    <span style="font-family: 'Poppins', sans-serif; font-size: 60px; font-weight: 800; position: relative;">
+                        <span>FREE</span>
+                        <span class="text-shadow">FREE</span>
+                        <span class="text-shadow-2">FREE</span>
+                        <span class="text-shadow-3">FREE</span>
+                    </span>
+                </div>
+                <div class="body-2-desc">
+                    HyperFyp offers free boosting to help you grow your account, prank friends, and much more!
+                    All this for free!
+                </div>
+            </div>
+            <div class="body-2-content">
+                <div class="body-2-title">
+                    <span style="font-family: 'Poppins', sans-serif; font-size: 60px; font-weight: 800; position: relative;">
+                        <span>FAST</span>
+                        <span class="text-shadow">FAST</span>
+                        <span class="text-shadow-2">FAST</span>
+                        <span class="text-shadow-3">FAST</span>
+                    </span>
+                </div>
+                <div class="body-2-desc">
+                    All orders instantly starts, process takes about 10 minutes!
+                </div>
+            </div>
+            <div class="body-2-content">
+                <div class="body-2-title">
+                    <span style="font-family: 'Poppins', sans-serif; font-size: 60px; font-weight: 800; position: relative;">
+                        <span>EASY</span>
+                        <span class="text-shadow">EASY</span>
+                        <span class="text-shadow-2">EASY</span>
+                        <span class="text-shadow-3">EASY</span>
+                    </span>
+                </div>
+                <div class="body-2-desc">
+                    With our easy interface, it was never so easy to become famous! What are you waiting for? Start Today!
+                </div>
+            </div>
+        </div>
+        @*<div class="body-3">
+            <span style="text-align: center; font-family: 'Poppins', sans-serif; font-size: 60px; font-weight: 800;">About Us</span>
+            <div style="height: 80%; padding: 50px; border-radius: 15px; border: 4px solid #f6a1ff;">
+            </div>
+        </div>*@
+    </div>
+</main>
+
+<script>
+    const socialMediaPlatforms = [
+        { name: 'Facebook!' },
+        { name: 'TikTok!' },
+        { name: 'Instagram!' }
+    ];
+
+    const typingElement = document.getElementById('typing');
+    let currentPlatformIndex = 0;
+    let currentLetterIndex = 0;
+    let isDeleting = false;
+
+    function typePlatforms() {
+        const platform = socialMediaPlatforms[currentPlatformIndex];
+        const platformName = platform.name;
+
+        const fullText = isDeleting ? platformName.slice(0, currentLetterIndex) : platformName.slice(0, currentLetterIndex + 1);
+
+        typingElement.innerHTML = `${fullText}`;
+
+        if (!isDeleting && currentLetterIndex === platformName.length) {
+            isDeleting = true;
+            setTimeout(typePlatforms, 1500); // Wait after typing complete
+        } else if (isDeleting && currentLetterIndex === 0) {
+            isDeleting = false;
+            currentPlatformIndex = (currentPlatformIndex + 1) % socialMediaPlatforms.length;
+            setTimeout(typePlatforms, 500); // Delay before typing next platform
+        } else {
+            setTimeout(typePlatforms, isDeleting ? 100 : 300); // Typing speed: 200 milliseconds, Deleting speed: 100 milliseconds
+        }
+
+        currentLetterIndex = isDeleting ? currentLetterIndex - 1 : currentLetterIndex + 1;
+    }
+
+    typePlatforms();
+</script>

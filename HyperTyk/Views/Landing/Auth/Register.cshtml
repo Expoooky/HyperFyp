@@ -1,0 +1,383 @@
+﻿@model HyperTyk.Models.auth
+@{
+    ViewBag.Title = "Register - HyperFyp";
+    Layout = "~/Views/Landing/_LandingLayout.cshtml";
+}
+<style>
+    h2 {
+        font-weight: 100;
+        margin: 20px 0px 10px 40px;
+    }
+
+    .body {
+        min-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        align-items: center;
+    }
+
+    .login-box {
+        max-width: 400px;
+        width: 85%;
+        margin: 10px auto;
+        padding: 25px;
+        border: 1px solid #442551;
+        border-radius: 10px;
+        box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+        background-color: #fafafaff;
+        color: #ba59f9;
+    }
+
+    .inputbox {
+        position: relative;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+        .inputbox label {
+            position: absolute;
+            top: -10px;
+            left: 5px;
+            color: #000000;
+            font-size: 1em;
+            pointer-events: none;
+            transition: .2s;
+        }
+
+        .inputbox input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-bottom: 2px solid #dcdcdc;
+            border-radius: 15px;
+            font-size: 14px;
+            outline: none;
+            background-color: #f4eefb;
+            box-sizing: border-box;
+        }
+
+            .inputbox input:focus + label, .inputbox input:not(:placeholder-shown) + label {
+                bottom: 50px;
+                font-size: 14px;
+                color: #333;
+            }
+
+            .inputbox input:focus, .inputbox input:not(:placeholder-shown) {
+                border-bottom-color: #9a00c7;
+            }
+
+        .inputbox ion-icon {
+            position: absolute;
+            right: 15px;
+            color: #700079;
+            font-size: 1.2em;
+            top: 15px;
+        }
+
+    .login-button {
+        display: flex;
+        justify-content: center;
+    }
+
+    .button {
+        width: 45%;
+        height: 49px;
+        border-radius: 35px;
+        background-color: #5b43a7;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 17px;
+        font-weight: 500;
+        color: #ffffff;
+        transition: background-color 0.4s ease;
+    }
+
+        .button:hover {
+            background-color: #312952;
+        }
+
+    .forget {
+        margin: 10px 20px 30px;
+        font-size: .9em;
+        color: #000000;
+        display: flex;
+        justify-content: center;
+        margin-left: 10px;
+    }
+
+        .forget label input {
+            margin-right: 3px;
+        }
+
+        .forget label a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+            .forget label a:hover {
+                text-decoration: underline;
+            }
+
+    .alert-placeholder, .alert {
+        width: auto;
+        height: 30px;
+        margin-top: -35px;
+        text-align: center;
+        padding: 15px;
+        box-sizing: border-box;
+        visibility: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .alert-danger {
+        visibility: visible; /* Make alert visible when there's an error */
+        color: #fcacb3;
+    }
+
+    .alert-success {
+        visibility: visible; /* Make alert visible when there's an error */
+        color: #c0ffc3;
+    }
+
+    .alert-danger {
+        border: 1.5px solid red;
+        background-color: #fcfcfcbe;
+        backdrop-filter: blur(50px);
+        visibility: visible; /* Make alert visible when there's an error */
+        color: #fc1c2f;
+    }
+
+    .alert-success {
+        border: 1.5px solid green;
+        background-color: #fcfcfcbe;
+        backdrop-filter: blur(50px);
+        visibility: visible; /* Make alert visible when there's an error */
+        color: #07e812;
+    }
+</style>
+<main class="inside">
+    <div class="body">
+        <div class="login-box">
+            <span style="color: #4b2c58;font-family: Bahnschrift;font-weight: 900; font-size: 18px; display:flex; justify-content: center;">REGISTER NOW TO GAIN INSTANT FAME!</span>
+            @using (Html.BeginForm("Register", "Landing", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("ReturnUrl", Request.QueryString["ReturnUrl"])
+                <section>
+                    <div class="form-box">
+                        <br /><br />
+                        <form action="Verify" method="post">
+                            <div class="inputbox">
+                                @Html.EditorFor(model => model.username, new { htmlAttributes = new { @class = "inputbox", @placeholder = "Username (max. 8 characters)", @name = "Username", @maxlength = "8", @id = "username", @required = "required", @type = "text", @oninput = "validateUsernameInput()" } })
+                            </div>
+                            <div class="inputbox">
+                                @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "inputbox", @placeholder = "Email Address", @name = "Email", @id = "email", @required = "required", @type = "email", @oninput = "validateEmailInput()" } })
+                            </div>
+                            <div class="inputbox">
+                                @Html.EditorFor(model => model.referralcode, new { htmlAttributes = new { @class = "inputbox", @placeholder = "Referral Code (Optional)", @value = ViewData["RegistrationCode"], @name = "registrationCode", @id = "registrationCode", @type = "text" } })
+                            </div>
+                            <div class="inputbox">
+                                <ion-icon name="eye-off-outline" id="toggle-icon" style="cursor: pointer;" onclick="togglePasswordVisibility('password-field', 'toggle-icon')"></ion-icon>
+                                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Password", @id = "myInput", @type = "password", @required = "required", @oninput = "validatePasswordInput()" } })
+                                @Html.EditorFor(model => model.confirmpassword, new { htmlAttributes = new { @class = "form-control password-confirm", @placeholder = "Confirm Password", @id = "myInputConfirm", @type = "password", @required = "required", @oninput = "validateConfirmPasswordOnInput()" } })
+                            </div>
+
+                            <br />
+                            <div class="forget">
+                                <label>
+                                    By signing up, you agree to our <a href="@Url.Action("terms", "Landing")" style="color: blueviolet; text-decoration: none;">Terms of Service</a> and you are acknowledging the <a href="@Url.Action("privacy", "Landing")" style="color: blueviolet; text-decoration: none;">Privacy Policy</a>.
+                                </label>
+                            </div>
+                            <div class="login-button">
+                                <button type="submit" class="button" id="post">Register</button>
+                            </div>
+                            <div style="display: flex; justify-content: center; font-weight: 500; font-size: 15px; margin-top: 15px;">
+                                <p style="color: black">Already a member? <a style="color:blueviolet;" href="@Url.Action("login", "Landing")">Log In</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            }
+        </div>
+    </div>
+</main>
+<script>
+    function togglePasswordVisibility() {
+        var passwordField = document.getElementById("myInput");
+        var passwordField2 = document.getElementById("myInputConfirm");
+        var icon = document.getElementById("toggle-icon");
+        if (passwordField.type && passwordField2.type === "password") {
+            passwordField.type = "text";
+            passwordField2.type = "text";
+            icon.setAttribute("name", "eye-outline");
+        } else {
+            passwordField.type = "password";
+            passwordField2.type = "password";
+            icon.setAttribute("name", "eye-off-outline");
+        }
+    }
+
+    window.onload = function () {
+        var errorAlert = document.getElementById('passwordMismatch');
+        var successAlert = document.getElementById('passwordMismatch2');
+
+        function hideNotification(notification) {
+            var container = notification.parentElement;
+            container.style.animation = 'slideOut 0.5s ease forwards';
+            container.addEventListener('animationend', function () {
+                container.style.display = 'none';
+            });
+        }
+
+        if (errorAlert) {
+            errorAlert.querySelector('.close').addEventListener('click', function () {
+                hideNotification(errorAlert);
+            });
+            setTimeout(function () {
+                hideNotification(errorAlert);
+            }, 4000);
+        } else if (successAlert) {
+            successAlert.querySelector('.close').addEventListener('click', function () {
+                hideNotification(successAlert);
+            });
+            setTimeout(function () {
+                hideNotification(successAlert);
+            }, 4000);
+        }
+    };
+
+    //function validateAll() {
+    //    var isValid = true;
+    //    var inputs = document.querySelectorAll('input[required]');
+
+    //    inputs.forEach(function (input) {
+    //        if (!input.value.trim()) {
+    //            input.style.borderColor = "red";
+    //            isValid = false;
+    //        } else {
+    //            input.style.borderColor = ""; // Reset border color
+    //        }
+    //    });
+
+    //    var password = document.getElementById("myInput").value;
+    //    var confirmPassword = document.getElementById("myInputConfirm").value;
+    //    var confirmInput = document.getElementById("myInputConfirm");
+
+    //    if (password !== confirmPassword) {
+    //        confirmInput.style.borderColor = "red";
+    //        isValid = false;
+    //    } else {
+    //        confirmInput.style.borderColor = "#9a00c7";
+    //    }
+
+    //    return isValid;
+    //}
+
+    function validateUsernameInput() {
+        var usernameInput = document.getElementById("username");
+        var username = usernameInput.value;
+        var usernameRegex = /^[a-zA-Z0-9]+$/; // Regex for letters and numbers only
+
+        if (username.length > 12) {
+            usernameInput.setCustomValidity("Username cannot exceed 12 characters.");
+            usernameInput.style.borderColor = "red";
+        } else if (username.length < 3) {
+            usernameInput.setCustomValidity("Username must be at least 6 characters long.");
+            usernameInput.style.borderColor = "red";
+        } else if (!usernameRegex.test(username)) {
+            usernameInput.setCustomValidity("Username can only contain letters and numbers.");
+            usernameInput.style.borderColor = "red";
+        } else {
+            usernameInput.setCustomValidity("");
+            usernameInput.style.borderColor = "#9a00c7"; // Reset border color
+        }
+    }
+
+    function validateEmailInput() {
+        var emailInput = document.getElementById("email");
+        var email = emailInput.value;
+        var emailRegex = /^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/;
+
+        if (email.includes("+")) {
+            emailInput.setCustomValidity("Email should not contain a '+' character");
+            emailInput.style.borderColor = "red";
+        } else if (!emailRegex.test(email)) {
+            emailInput.setCustomValidity("Please enter a valid email address");
+            emailInput.style.borderColor = "red";
+        } else {
+            emailInput.setCustomValidity("");
+            emailInput.style.borderColor = "#9a00c7"; // Reset border color
+        }
+    }
+
+    function validatePasswordInput() {
+        var passwordInput = document.getElementById("myInput");
+        var password = passwordInput.value;
+        var minLength = 8;
+        var minSpecialChars = 2;
+        var specialChars = /[!@@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+        var hasNumber = /\d/;
+        var hasCapitalLetter = /[A-Z]/;
+
+        if (password.length < minLength) {
+            passwordInput.setCustomValidity("Password must be at least 8 characters long");
+            passwordInput.style.borderColor = "red";
+        } else if (!specialChars.test(password) || (password.match(/[^a-zA-Z0-9]/g) || []).length < minSpecialChars) {
+            passwordInput.setCustomValidity("Password must contain at least 2 special characters");
+            passwordInput.style.borderColor = "red";
+        } else if (!hasNumber.test(password)) {
+            passwordInput.setCustomValidity("Password must contain at least one number");
+            passwordInput.style.borderColor = "red";
+        } else if (!hasCapitalLetter.test(password)) {
+            passwordInput.setCustomValidity("Password must contain at least one capital letter");
+            passwordInput.style.borderColor = "red";
+        } else {
+            passwordInput.setCustomValidity("");
+            passwordInput.style.borderColor = "#9a00c7"; // Reset border color
+        }
+    }
+
+    function validateConfirmPasswordOnInput() {
+        var confirmInput = document.getElementById("myInputConfirm");
+
+        // Prevent pasted characters
+        confirmInput.onpaste = function (e) {
+            e.preventDefault();
+        };
+
+        // Check if passwords match
+        var password = document.getElementById("myInput").value;
+        var confirmPassword = confirmInput.value;
+
+        if (password !== confirmPassword) {
+            confirmInput.style.borderColor = "red";
+            confirmInput.setCustomValidity("Passwords do not match");
+        } else {
+            confirmInput.style.borderColor = "#9a00c7";
+            confirmInput.setCustomValidity("");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        var registrationCodeInput = document.getElementById("registrationCode");
+
+        var registrationCode = "@(ViewData["RegistrationCode"] ?? "")";
+        if (registrationCode !== "") {
+            registrationCodeInput.value = registrationCode;
+            registrationCodeInput.setAttribute("readonly", true);
+        }
+    });
+</script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

@@ -1,0 +1,619 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="hypertykModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="referralcode" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="avatar" Type="image" />
+          <Property Name="referralcode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="coins" Type="float" />
+          <Property Name="total_coin_earned" Type="float" />
+          <Property Name="total_coin_spent" Type="float" />
+          <Property Name="total_users_referred" Type="int" />
+          <Property Name="total_offers_completed" Type="int" />
+          <Property Name="isverified" Type="int" />
+          <Property Name="last_login_coins" Type="datetime" />
+        </EntityType>
+        <EntityType Name="account_referrer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="referrer_id" Type="varchar" MaxLength="50" />
+          <Property Name="referrer_code" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="auth">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar(max)" Nullable="false" />
+          <Property Name="usertype" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="datecreated" Type="date" Nullable="false" />
+          <Property Name="isbanned" Type="int" Nullable="false" />
+          <Property Name="loginuser" Type="varchar" MaxLength="50" />
+          <Property Name="referralcode" Type="varchar" MaxLength="50" />
+          <Property Name="confirmpassword" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="auth_chng_password">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="token" Type="varchar(max)" />
+          <Property Name="success_request_attempts" Type="int" Nullable="false" />
+          <Property Name="is_expired" Type="int" />
+        </EntityType>
+        <EntityType Name="auth_req_forgot">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="pin" Type="int" />
+          <Property Name="token" Type="varchar(max)" />
+          <Property Name="epoch_timestamp" Type="bigint" />
+          <Property Name="total_req_attempts" Type="int" />
+          <Property Name="req_attempts" Type="int" />
+          <Property Name="last_attempt_timestamp" Type="datetime" />
+          <Property Name="is_expired" Type="int" />
+        </EntityType>
+        <EntityType Name="auth_req_verify">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="token" Type="varchar(max)" Nullable="false" />
+          <Property Name="epoch_timestamp" Type="bigint" Nullable="false" />
+          <Property Name="total_req_attempts" Type="int" Nullable="false" />
+          <Property Name="req_attempts" Type="int" Nullable="false" />
+          <Property Name="last_attempt_timestamp" Type="datetime" Nullable="false" />
+          <Property Name="is_expired" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="promo_codes">
+          <Key>
+            <PropertyRef Name="promocode" />
+          </Key>
+          <Property Name="promocode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="expiration_date" Type="datetime" Nullable="false" />
+          <Property Name="discount_type" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="discount_value" Type="int" Nullable="false" />
+          <Property Name="usage_limit" Type="int" />
+          <Property Name="user_limit" Type="int" />
+          <Property Name="is_active" Type="int" Nullable="false" />
+          <Property Name="datecreated" Type="datetime" Nullable="false" />
+          <Property Name="promocode_author" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="promo_redemption_logs">
+          <Key>
+            <PropertyRef Name="log_id" />
+          </Key>
+          <Property Name="log_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="promocode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="redemption_date_epoch" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="referral_log">
+          <Key>
+            <PropertyRef Name="log_id" />
+          </Key>
+          <Property Name="log_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="referrer_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="referred_id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="referred_username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="referred_email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="epochtime" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="social_orders">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="order_id" Type="bigint" Nullable="false" />
+          <Property Name="service_id" Type="int" Nullable="false" />
+          <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="item" Type="varchar" MaxLength="50" />
+          <Property Name="amount" Type="int" Nullable="false" />
+          <Property Name="amount_in_coins" Type="float" Nullable="false" />
+          <Property Name="isFastLane" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="social_service">
+          <Key>
+            <PropertyRef Name="service_id" />
+          </Key>
+          <Property Name="service_id" Type="int" Nullable="false" />
+          <Property Name="item" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="item_desc" Type="varchar" MaxLength="50" />
+          <Property Name="rate" Type="int" Nullable="false" />
+          <Property Name="interval" Type="int" />
+          <Property Name="fast_lane_interval" Type="int" />
+          <Property Name="fast_lane_interval_rate" Type="int" />
+        </EntityType>
+        <Association Name="FK_account_auth">
+          <End Role="auth" Type="Self.auth" Multiplicity="1" />
+          <End Role="account" Type="Self.account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="auth">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_auth_chng_password_auth">
+          <End Role="auth" Type="Self.auth" Multiplicity="1" />
+          <End Role="auth_chng_password" Type="Self.auth_chng_password" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="auth">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="auth_chng_password">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_promo_redemption_logs_auth">
+          <End Role="auth" Type="Self.auth" Multiplicity="1" />
+          <End Role="promo_redemption_logs" Type="Self.promo_redemption_logs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="auth">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="promo_redemption_logs">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_promo_redemption_logs_promo_codes">
+          <End Role="promo_codes" Type="Self.promo_codes" Multiplicity="1" />
+          <End Role="promo_redemption_logs" Type="Self.promo_redemption_logs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="promo_codes">
+              <PropertyRef Name="promocode" />
+            </Principal>
+            <Dependent Role="promo_redemption_logs">
+              <PropertyRef Name="promocode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="hypertykModelStoreContainer">
+          <EntitySet Name="account" EntityType="Self.account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="account_referrer" EntityType="Self.account_referrer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="auth" EntityType="Self.auth" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="auth_chng_password" EntityType="Self.auth_chng_password" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="auth_req_forgot" EntityType="Self.auth_req_forgot" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="auth_req_verify" EntityType="Self.auth_req_verify" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="promo_codes" EntityType="Self.promo_codes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="promo_redemption_logs" EntityType="Self.promo_redemption_logs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="referral_log" EntityType="Self.referral_log" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="social_orders" EntityType="Self.social_orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="social_service" EntityType="Self.social_service" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_account_auth" Association="Self.FK_account_auth">
+            <End Role="auth" EntitySet="auth" />
+            <End Role="account" EntitySet="account" />
+          </AssociationSet>
+          <AssociationSet Name="FK_auth_chng_password_auth" Association="Self.FK_auth_chng_password_auth">
+            <End Role="auth" EntitySet="auth" />
+            <End Role="auth_chng_password" EntitySet="auth_chng_password" />
+          </AssociationSet>
+          <AssociationSet Name="FK_promo_redemption_logs_auth" Association="Self.FK_promo_redemption_logs_auth">
+            <End Role="auth" EntitySet="auth" />
+            <End Role="promo_redemption_logs" EntitySet="promo_redemption_logs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_promo_redemption_logs_promo_codes" Association="Self.FK_promo_redemption_logs_promo_codes">
+            <End Role="promo_codes" EntitySet="promo_codes" />
+            <End Role="promo_redemption_logs" EntitySet="promo_redemption_logs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="hypertykModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="auth">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="usertype" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="datecreated" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="isbanned" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="accounts" Relationship="hypertykModel.FK_account_auth" FromRole="auth" ToRole="account" />
+          <NavigationProperty Name="auth_chng_password" Relationship="hypertykModel.FK_auth_chng_password_auth" FromRole="auth" ToRole="auth_chng_password" />
+          <NavigationProperty Name="promo_redemption_logs" Relationship="hypertykModel.FK_promo_redemption_logs_auth" FromRole="auth" ToRole="promo_redemption_logs" />
+          <Property Name="loginuser" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="referralcode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="confirmpassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="auths" EntityType="Self.auth" />
+          <EntitySet Name="accounts" EntityType="hypertykModel.account" />
+          <AssociationSet Name="FK_account_auth" Association="hypertykModel.FK_account_auth">
+            <End Role="auth" EntitySet="auths" />
+            <End Role="account" EntitySet="accounts" />
+          </AssociationSet>
+          <EntitySet Name="promo_codes" EntityType="hypertykModel.promo_codes" />
+          <EntitySet Name="auth_chng_password" EntityType="hypertykModel.auth_chng_password" />
+          <AssociationSet Name="FK_auth_chng_password_auth" Association="hypertykModel.FK_auth_chng_password_auth">
+            <End Role="auth" EntitySet="auths" />
+            <End Role="auth_chng_password" EntitySet="auth_chng_password" />
+          </AssociationSet>
+          <EntitySet Name="auth_req_forgot" EntityType="hypertykModel.auth_req_forgot" />
+          <EntitySet Name="promo_redemption_logs" EntityType="hypertykModel.promo_redemption_logs" />
+          <AssociationSet Name="FK_promo_redemption_logs_auth" Association="hypertykModel.FK_promo_redemption_logs_auth">
+            <End Role="auth" EntitySet="auths" />
+            <End Role="promo_redemption_logs" EntitySet="promo_redemption_logs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_promo_redemption_logs_promo_codes" Association="hypertykModel.FK_promo_redemption_logs_promo_codes">
+            <End Role="promo_codes" EntitySet="promo_codes" />
+            <End Role="promo_redemption_logs" EntitySet="promo_redemption_logs" />
+          </AssociationSet>
+          <EntitySet Name="social_service" EntityType="hypertykModel.social_service" />
+          <EntitySet Name="social_orders" EntityType="hypertykModel.social_orders" />
+          <EntitySet Name="referral_log" EntityType="hypertykModel.referral_log" />
+          <EntitySet Name="auth_req_verify" EntityType="hypertykModel.auth_req_verify" />
+          <EntitySet Name="account_referrer" EntityType="hypertykModel.account_referrer" />
+        </EntityContainer>
+        <EntityType Name="account">
+          <Key>
+            <PropertyRef Name="referralcode" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="avatar" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="referralcode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="coins" Type="Double" />
+          <Property Name="total_coin_earned" Type="Double" />
+          <Property Name="total_coin_spent" Type="Double" />
+          <Property Name="total_users_referred" Type="Int32" />
+          <NavigationProperty Name="auth" Relationship="hypertykModel.FK_account_auth" FromRole="account" ToRole="auth" />
+          <Property Name="total_offers_completed" Type="Int32" />
+          <Property Name="isverified" Type="Int32" />
+          <Property Name="last_login_coins" Type="DateTime" Precision="3" />
+        </EntityType>
+        <Association Name="FK_account_auth">
+          <End Type="hypertykModel.auth" Role="auth" Multiplicity="1" />
+          <End Type="hypertykModel.account" Role="account" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="auth">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="account">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="promo_codes">
+          <Key>
+            <PropertyRef Name="promocode" />
+          </Key>
+          <Property Name="promocode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="expiration_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="discount_type" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="discount_value" Type="Int32" Nullable="false" />
+          <Property Name="usage_limit" Type="Int32" />
+          <Property Name="user_limit" Type="Int32" />
+          <Property Name="is_active" Type="Int32" Nullable="false" />
+          <Property Name="datecreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="promocode_author" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="promo_redemption_logs" Relationship="hypertykModel.FK_promo_redemption_logs_promo_codes" FromRole="promo_codes" ToRole="promo_redemption_logs" />
+        </EntityType>
+        <EntityType Name="auth_chng_password">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="success_request_attempts" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="auth" Relationship="hypertykModel.FK_auth_chng_password_auth" FromRole="auth_chng_password" ToRole="auth" />
+          <Property Name="is_expired" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_auth_chng_password_auth">
+          <End Type="hypertykModel.auth" Role="auth" Multiplicity="1" />
+          <End Type="hypertykModel.auth_chng_password" Role="auth_chng_password" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="auth">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="auth_chng_password">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="auth_req_forgot">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="pin" Type="Int32" />
+          <Property Name="token" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="epoch_timestamp" Type="Int64" />
+          <Property Name="total_req_attempts" Type="Int32" />
+          <Property Name="req_attempts" Type="Int32" />
+          <Property Name="last_attempt_timestamp" Type="DateTime" Precision="3" />
+          <Property Name="is_expired" Type="Int32" />
+        </EntityType>
+        <EntityType Name="promo_redemption_logs">
+          <Key>
+            <PropertyRef Name="log_id" />
+          </Key>
+          <Property Name="log_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="promocode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="redemption_date_epoch" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="auth" Relationship="hypertykModel.FK_promo_redemption_logs_auth" FromRole="promo_redemption_logs" ToRole="auth" />
+          <NavigationProperty Name="promo_codes" Relationship="hypertykModel.FK_promo_redemption_logs_promo_codes" FromRole="promo_redemption_logs" ToRole="promo_codes" />
+        </EntityType>
+        <Association Name="FK_promo_redemption_logs_auth">
+          <End Type="hypertykModel.auth" Role="auth" Multiplicity="1" />
+          <End Type="hypertykModel.promo_redemption_logs" Role="promo_redemption_logs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="auth">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="promo_redemption_logs">
+              <PropertyRef Name="id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_promo_redemption_logs_promo_codes">
+          <End Type="hypertykModel.promo_codes" Role="promo_codes" Multiplicity="1" />
+          <End Type="hypertykModel.promo_redemption_logs" Role="promo_redemption_logs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="promo_codes">
+              <PropertyRef Name="promocode" />
+            </Principal>
+            <Dependent Role="promo_redemption_logs">
+              <PropertyRef Name="promocode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="social_service">
+          <Key>
+            <PropertyRef Name="service_id" />
+          </Key>
+          <Property Name="service_id" Type="Int32" Nullable="false" />
+          <Property Name="item" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="item_desc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="rate" Type="Int32" Nullable="false" />
+          <Property Name="interval" Type="Int32" />
+          <Property Name="fast_lane_interval" Type="Int32" />
+          <Property Name="fast_lane_interval_rate" Type="Int32" />
+        </EntityType>
+        <EntityType Name="social_orders">
+          <Key>
+            <PropertyRef Name="order_id" />
+          </Key>
+          <Property Name="order_id" Type="Int64" Nullable="false" />
+          <Property Name="service_id" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="item" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="amount" Type="Int32" Nullable="false" />
+          <Property Name="amount_in_coins" Type="Double" Nullable="false" />
+          <Property Name="isFastLane" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="referral_log">
+          <Key>
+            <PropertyRef Name="log_id" />
+          </Key>
+          <Property Name="log_id" Type="Int32" Nullable="false" />
+          <Property Name="referrer_id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="referred_id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="referred_username" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="referred_email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="epochtime" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="auth_req_verify">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="token" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="epoch_timestamp" Type="Int64" Nullable="false" />
+          <Property Name="total_req_attempts" Type="Int32" Nullable="false" />
+          <Property Name="req_attempts" Type="Int32" Nullable="false" />
+          <Property Name="last_attempt_timestamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="is_expired" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="account_referrer">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="referrer_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="referrer_code" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="hypertykModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="auths">
+            <EntityTypeMapping TypeName="hypertykModel.auth">
+              <MappingFragment StoreEntitySet="auth">
+                <ScalarProperty Name="confirmpassword" ColumnName="confirmpassword" />
+                <ScalarProperty Name="referralcode" ColumnName="referralcode" />
+                <ScalarProperty Name="loginuser" ColumnName="loginuser" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="usertype" ColumnName="usertype" />
+                <ScalarProperty Name="datecreated" ColumnName="datecreated" />
+                <ScalarProperty Name="isbanned" ColumnName="isbanned" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="accounts">
+            <EntityTypeMapping TypeName="hypertykModel.account">
+              <MappingFragment StoreEntitySet="account">
+                <ScalarProperty Name="last_login_coins" ColumnName="last_login_coins" />
+                <ScalarProperty Name="isverified" ColumnName="isverified" />
+                <ScalarProperty Name="total_offers_completed" ColumnName="total_offers_completed" />
+                <ScalarProperty Name="total_users_referred" ColumnName="total_users_referred" />
+                <ScalarProperty Name="total_coin_spent" ColumnName="total_coin_spent" />
+                <ScalarProperty Name="total_coin_earned" ColumnName="total_coin_earned" />
+                <ScalarProperty Name="coins" ColumnName="coins" />
+                <ScalarProperty Name="referralcode" ColumnName="referralcode" />
+                <ScalarProperty Name="avatar" ColumnName="avatar" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="promo_codes">
+            <EntityTypeMapping TypeName="hypertykModel.promo_codes">
+              <MappingFragment StoreEntitySet="promo_codes">
+                <ScalarProperty Name="promocode_author" ColumnName="promocode_author" />
+                <ScalarProperty Name="datecreated" ColumnName="datecreated" />
+                <ScalarProperty Name="is_active" ColumnName="is_active" />
+                <ScalarProperty Name="user_limit" ColumnName="user_limit" />
+                <ScalarProperty Name="usage_limit" ColumnName="usage_limit" />
+                <ScalarProperty Name="discount_value" ColumnName="discount_value" />
+                <ScalarProperty Name="discount_type" ColumnName="discount_type" />
+                <ScalarProperty Name="expiration_date" ColumnName="expiration_date" />
+                <ScalarProperty Name="promocode" ColumnName="promocode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="auth_chng_password">
+            <EntityTypeMapping TypeName="hypertykModel.auth_chng_password">
+              <MappingFragment StoreEntitySet="auth_chng_password">
+                <ScalarProperty Name="is_expired" ColumnName="is_expired" />
+                <ScalarProperty Name="success_request_attempts" ColumnName="success_request_attempts" />
+                <ScalarProperty Name="token" ColumnName="token" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="auth_req_forgot">
+            <EntityTypeMapping TypeName="hypertykModel.auth_req_forgot">
+              <MappingFragment StoreEntitySet="auth_req_forgot">
+                <ScalarProperty Name="is_expired" ColumnName="is_expired" />
+                <ScalarProperty Name="last_attempt_timestamp" ColumnName="last_attempt_timestamp" />
+                <ScalarProperty Name="req_attempts" ColumnName="req_attempts" />
+                <ScalarProperty Name="total_req_attempts" ColumnName="total_req_attempts" />
+                <ScalarProperty Name="epoch_timestamp" ColumnName="epoch_timestamp" />
+                <ScalarProperty Name="token" ColumnName="token" />
+                <ScalarProperty Name="pin" ColumnName="pin" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="promo_redemption_logs">
+            <EntityTypeMapping TypeName="hypertykModel.promo_redemption_logs">
+              <MappingFragment StoreEntitySet="promo_redemption_logs">
+                <ScalarProperty Name="redemption_date_epoch" ColumnName="redemption_date_epoch" />
+                <ScalarProperty Name="promocode" ColumnName="promocode" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="log_id" ColumnName="log_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="social_service">
+            <EntityTypeMapping TypeName="hypertykModel.social_service">
+              <MappingFragment StoreEntitySet="social_service">
+                <ScalarProperty Name="fast_lane_interval_rate" ColumnName="fast_lane_interval_rate" />
+                <ScalarProperty Name="fast_lane_interval" ColumnName="fast_lane_interval" />
+                <ScalarProperty Name="interval" ColumnName="interval" />
+                <ScalarProperty Name="rate" ColumnName="rate" />
+                <ScalarProperty Name="item_desc" ColumnName="item_desc" />
+                <ScalarProperty Name="item" ColumnName="item" />
+                <ScalarProperty Name="service_id" ColumnName="service_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="social_orders">
+            <EntityTypeMapping TypeName="hypertykModel.social_orders">
+              <MappingFragment StoreEntitySet="social_orders">
+                <ScalarProperty Name="isFastLane" ColumnName="isFastLane" />
+                <ScalarProperty Name="amount_in_coins" ColumnName="amount_in_coins" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="item" ColumnName="item" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="service_id" ColumnName="service_id" />
+                <ScalarProperty Name="order_id" ColumnName="order_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="referral_log">
+            <EntityTypeMapping TypeName="hypertykModel.referral_log">
+              <MappingFragment StoreEntitySet="referral_log">
+                <ScalarProperty Name="epochtime" ColumnName="epochtime" />
+                <ScalarProperty Name="referred_email" ColumnName="referred_email" />
+                <ScalarProperty Name="referred_username" ColumnName="referred_username" />
+                <ScalarProperty Name="referred_id" ColumnName="referred_id" />
+                <ScalarProperty Name="referrer_id" ColumnName="referrer_id" />
+                <ScalarProperty Name="log_id" ColumnName="log_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="auth_req_verify">
+            <EntityTypeMapping TypeName="hypertykModel.auth_req_verify">
+              <MappingFragment StoreEntitySet="auth_req_verify">
+                <ScalarProperty Name="is_expired" ColumnName="is_expired" />
+                <ScalarProperty Name="last_attempt_timestamp" ColumnName="last_attempt_timestamp" />
+                <ScalarProperty Name="req_attempts" ColumnName="req_attempts" />
+                <ScalarProperty Name="total_req_attempts" ColumnName="total_req_attempts" />
+                <ScalarProperty Name="epoch_timestamp" ColumnName="epoch_timestamp" />
+                <ScalarProperty Name="token" ColumnName="token" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="account_referrer">
+            <EntityTypeMapping TypeName="hypertykModel.account_referrer">
+              <MappingFragment StoreEntitySet="account_referrer">
+                <ScalarProperty Name="referrer_code" ColumnName="referrer_code" />
+                <ScalarProperty Name="referrer_id" ColumnName="referrer_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

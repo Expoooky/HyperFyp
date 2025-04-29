@@ -1,0 +1,217 @@
+﻿
+@{
+    ViewBag.Title = "User Details";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<style>
+    .information-body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        color: black;
+    }
+
+    .user-information {
+        width: 100%;
+        max-width: 500px;
+        padding: 20px 15px;
+        border-radius: 15px;
+        background: #f1f1f1;
+    }
+
+        .user-information img {
+            height: 125px;
+            width: 125px;
+            background-size: contain;
+            border-radius: 50%;
+            border: 2px solid #b3a4ff;
+        }
+
+    .order-information {
+        width: 100%;
+        max-width: 800px;
+        padding: 20px 15px;
+        border-radius: 15px;
+        background: #f1f1f1;
+    }
+
+    .information {
+        padding: 15px;
+    }
+
+    .data {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        table thead {
+            background-color: #fff0;
+        }
+
+            table thead tr {
+            }
+
+                table thead tr th {
+                    font-size: 14px;
+                    letter-spacing: 0.35px;
+                    padding: 5px;
+                }
+
+        table tbody tr td {
+            font-size: 14px;
+            letter-spacing: 0.35px;
+            background-color: #fff0;
+            padding: 8px;
+            text-align: center;
+        }
+
+    .back-button {
+        position: fixed;
+        text-shadow: 1px 1px 2px black;
+    }
+
+        .back-button a {
+            display: flex;
+            align-content: center;
+            padding: 7px;
+            border-radius: 25px;
+            background: #00d812;
+            color: #ffffff;
+            font-size: 25px;
+            text-decoration: none;
+            transition: all 0.25s ease-in-out;
+        }
+
+            .back-button a:hover {
+                background: #004e07;
+                color: #00ff21;
+            }
+</style>
+<div class="back-button">
+    <a href="@Url.Action("Index", "Admin")"><i class='bx bx-arrow-back'></i></a>
+</div>
+<section class="information-body">
+    <h2 style="color: white">User Information</h2>
+    <div class="user-information">
+        <div style="display: flex; justify-content: center;">
+            <img src="data:image/png;base64,@Convert.ToBase64String(ViewBag.UserInfo.avatar)" />
+        </div>
+        <br />
+        <div class="information">
+            <div class="data">
+                <span><strong>Account Status</strong></span>
+                @{ 
+                    var verificationStatus = ViewBag.UserInfo.isverified == 1 ? "<span style='display: flex; align-items: center;'><i style='font-size: 25px; color: #02a500;' class='bx bx-check' title='Verified'></i> Verified</span>" : "<span style='display: flex; align-items: center;'><i style='font-size: 25px; color: #970000;' class='bx bx-x' title='Not Verified'></i> Not Verified</span>";
+                }
+                <span>@Html.Raw(verificationStatus)</span>
+            </div>
+            <div class="data">
+                <span><strong>Email</strong></span>
+                <span>@ViewBag.UserInfo.email</span>
+            </div>
+            <div class="data">
+                <span><strong>Username</strong></span>
+                <span>@ViewBag.UserInfo.username</span>
+            </div>
+            <div class="data">
+                <span><strong>Password</strong></span>
+                <span style="color: #00c219; font-weight: 500;">Secured</span>
+            </div>
+            <br />
+            <div class="data">
+                <span><strong>Referral Code</strong></span>
+                <span>@ViewBag.UserInfo.referralcode</span>
+            </div>
+            <div class="data">
+                <span><strong>Users Referred</strong></span>
+                <span>@ViewBag.UserInfo.total_users_referred</span>
+            </div>
+            <br />
+            <div class="data">
+                <span><strong>Coins</strong></span>
+                @{
+                    double? coinsValue = ViewBag.UserInfo.coins; // Assuming you're passing the coins value to the view via ViewBag
+                    string formattedCoins = coinsValue?.ToString("0.00");
+                }
+                <span style="display: flex; align-items: center; gap: 5px;"><i style="color: #ffc300" class='bx bxs-coin-stack'></i> @formattedCoins</span>
+            </div>
+            <div class="data">
+                <span><strong>Total Earned</strong></span>
+                @{
+                    double? coinsValue2 = ViewBag.UserInfo.total_coin_earned; // Assuming you're passing the coins value to the view via ViewBag
+                    string formattedCoins2 = coinsValue2?.ToString("0.00");
+                }
+                <span style="display: flex; align-items: center; gap: 5px;"><i style="color: #ffc300" class='bx bxs-coin-stack'></i> <span style="color: #008911">@formattedCoins2</span></span>
+            </div>
+            <div class="data">
+                <span><strong>Total Spent</strong></span>
+                @{
+                    double? coinsValue3 = ViewBag.UserInfo.total_coin_spent; // Assuming you're passing the coins value to the view via ViewBag
+                    string formattedCoins3 = coinsValue3?.ToString("0.00");
+                }
+                <span style="display: flex; align-items: center; gap: 5px;"><i style="color: #ffc300" class='bx bxs-coin-stack'></i> <span style="color: #960202">@formattedCoins3</span></span>
+            </div>
+        </div>
+    </div>
+    <div class="order-information">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Service ID</th>
+                    <th>Order #</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Total <i class='bx bxs-coin-stack'></i></th>
+                    <th>Fast-Lane</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var order in Model)
+                    {
+                        <tr>
+                            <td data-label="Service ID">
+                                @order.service_id
+                            </td>
+                            <td data-label="Order #">
+                                @order.order_id
+                            </td>
+                            <td data-label="Description">
+                                @order.item
+                            </td>
+                            <td data-label="Amount">
+                                @order.amount
+                            </td>
+                            <td data-label="Total">
+                                @{
+                                    double? coinsValue6 = order.amount_in_coins; // Assuming you're passing the coins value to the view via ViewBag
+                                    string formattedCoins6 = coinsValue6?.ToString("0.00");
+                                }
+                                @formattedCoins6
+                            </td>
+                            <td data-label="Fast-Lane?">
+                                @{
+                                    var isFastLane = order.isFastLane == 1 ? "<i style='font-size: 25px; color: #02a500;' class='bx bx-check' title='Verified'></i>" : "<i style='font-size: 25px; color: #970000;' class='bx bx-x' title='Not Verified'></i>";
+                                }
+                                @Html.Raw(isFastLane)
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="6" style="text-align: center; padding-left: unset;">No Order(s) found.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

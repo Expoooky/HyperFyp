@@ -1,0 +1,374 @@
+﻿@using System.Linq
+
+@{
+    ViewBag.Title = "Giveaway";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        table thead {
+            background-color: #034b0093;
+        }
+
+            table thead tr {
+            }
+
+                table thead tr th {
+                    font-size: 14px;
+                    letter-spacing: 0.35px;
+                    padding: 5px;
+                    text-align: start;
+                }
+
+        table tbody tr td {
+            font-size: 14px;
+            letter-spacing: 0.35px;
+            background-color: #809d813f;
+            padding: 8px;
+            text-align: start;
+            transition: all 0.15s ease-in-out;
+        }
+
+        table tbody tr:hover td {
+            color: black;
+            background-color: #ffffff3f;
+        }
+
+    .edit {
+        background-color: #02ac00cf;
+    }
+
+    .remove {
+        background-color: #ff0000cf;
+    }
+
+    #creategiv {
+        padding: 10px 25px;
+        border-radius: 35px;
+        background-color: #44a743;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: #ffffff;
+        transition: background-color 0.4s ease;
+    }
+
+        #creategiv:hover {
+            background-color: #153515;
+        }
+</style>
+<div style="width: 100%; display: inline-flex; align-items: center; justify-content: space-between; flex-wrap: wrap">
+    <h1>Manage Giveaways</h1>
+    <button id="creategiv">Create Giveaway</button>
+</div>
+<div class="container">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Active?</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Created At</th>
+                    <th>Expired On</th>
+                    <th>Participant(s)</th>
+                    <th>Winner(s)</th>
+                    <th>Action(s)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var giveaway in Model)
+                    {
+                        <tr>
+                            <td data-label="is Active?">@(giveaway.expired_on.CompareTo(DateTime.UtcNow.ToString("MMMM dd, yyyy H:mm tt")) > 0 ? "YES" : "NO")</td>
+                            <td data-label="Title"><strong>@giveaway.title</strong></td>
+                            <td data-label="Description">@giveaway.description</td>
+                            <td data-label="Created At">@giveaway.created_at</td>
+                            <td data-label="Expired On">@giveaway.expired_on</td>
+                            <td data-label="Participant(s)">@giveaway.participants.Count</td>
+                            <td data-label="Winner(s)">
+                                @if (giveaway.WinnersString == "" || giveaway.WinnersString == null)
+                                {
+                                    <span>No Winners yet.</span>    
+                                }
+                                else
+                                {
+                                    @giveaway.WinnersString
+                                }
+                            </td>
+                            <td data-label="Action(s)">
+                                <button class="remove" id="btn" data-code="@giveaway.id" onclick="removeGiveaway(this)">
+                                    <p id="tooltiptext">Delete</p>
+                                    <i style="display: flex; justify-content: center; align-items: center; font-weight: 900" class='bx bxs-trash'></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="10" style="text-align:center; padding-left: unset;">There's no giveaways listed.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+    .popup {
+        width: 500px;
+        max-width: 100%;
+        color: black;
+        position: absolute;
+        top: -150%;
+        left: 50%;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.25);
+        padding: 20px;
+        background: #fff;
+        box-shadow: 2px 2px 5px 5px rgba(0,0,0,0.15);
+        border-radius: 15px;
+        transition: top 0ms ease-in-out 0.2s, opacity 0.2s ease-in-out 0s, transform 0.2s ease-in-out 0s;
+    }
+
+        .popup.active {
+            top: 50%;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            transition: top 0s ease-in-out 0s, opacity 0.2s ease-in-out 0s, transform 0.2s ease-in-out 0s;
+        }
+
+        .popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            background: #888;
+            color: #eee;
+            text-align: center;
+            line-height: 25px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .popup .form h2 {
+            text-align: center;
+            color: #222;
+            margin: 10px 0px 20px;
+            font-size: 25px;
+        }
+
+        .popup .form .form-element {
+            margin: 15px 0px;
+        }
+
+            .popup .form .form-element label {
+                font-size: 14px;
+                color: #222;
+            }
+
+            .popup .form .form-element input[type="text"],
+            .popup .form .form-element input[type="number"],
+            .popup .form .form-element input[type="datetime-local"] {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-bottom: 2px solid #dcdcdc;
+                border-radius: 15px;
+                font-size: 14px;
+                background-color: #effbee;
+                box-sizing: border-box;
+            }
+
+            .popup .form .form-element input[type="text"],
+            .popup .form .form-element input[type="number"],
+            .popup .form .form-element input[type="datetime-local"] {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-bottom: 2px solid #dcdcdc;
+                border-radius: 15px;
+                font-size: 14px;
+                background-color: #effbee;
+                box-sizing: border-box;
+            }
+
+            .popup .form .form-element button {
+                width: 100%;
+                height: 40px;
+                border: none;
+                outline: none;
+                font-size: 15px;
+                background: #023000;
+                color: #f5f5f5;
+                border-radius: 15px;
+                cursor: pointer;
+                transition: all 0.25s ease-in-out;
+            }
+
+                .popup .form .form-element button:hover {
+                    background: #0230007b;
+                    color: black;
+                }
+
+    .form-element-checkbox {
+        display: flex;
+        align-items: center;
+    }
+
+        .form-element-checkbox label {
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #222;
+        }
+
+        .form-element-checkbox input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #dcdcdc;
+            border-radius: 3px;
+            cursor: pointer;
+            background-color: #fff;
+        }
+
+            .form-element-checkbox input[type="checkbox"]:checked {
+                background-color: #023000;
+            }
+
+        .form-element-checkbox input[type="number"] {
+            width: 35px;
+            padding: 0px 5px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 15px;
+            font-size: 14px;
+            text-align: center;
+            background-color: #bacab8;
+            box-sizing: border-box;
+            display: none;
+        }
+
+        .form-element-checkbox input[type="checkbox"]:checked + label + input[type="number"] {
+            display: block;
+            pointer-events: auto;
+        }
+</style>
+<div class="popup">
+    <div class="close-btn">&times;</div>
+    <div class="form">
+        @using (Html.BeginForm("Create_Giveaway", "Admin", FormMethod.Post))
+        {
+            <h2>Create new Giveaway</h2>
+            <div class="form-element">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" required />
+            </div>
+            <div class="form-element">
+                <label for="desc">Description</label>
+                <input type="text" id="desc" name="desc" required />
+            </div>
+            <div class="form-element">
+                <label for="winnerCount">How many Winners?</label>
+                <input type="number" min="1" name="winnerCount" id="winnerCount" required />
+            </div>
+            <div class="form-element">
+                <label for="expiration_date">Valid Until?</label>
+                <input type="datetime-local" name="expiration_date" id="expiration_date" required />
+            </div>
+
+            <h3>Requirements</h3>
+            <div class="form-element-checkbox">
+                <input type="checkbox" id="isVerified" name="isVerified" value="true" />
+                <label for="isVerified">Must be Verified</label>
+            </div>
+            <div class="form-element-checkbox">
+                <input type="checkbox" id="referralCount" name="referralCount" value="true" />
+                <label for="referralCount">Minimum Referral Count:</label>
+                <input type="number" id="minReferralCount" name="minReferralCount" min="1" value="1" />
+            </div>
+            <div class="form-element-checkbox">
+                <input type="checkbox" id="offerCount" name="offerCount" value="true" />
+                <label for="offerCount">Minimum Offer Count:</label>
+                <input type="number" id="minOfferCount" name="minOfferCount" min="1" value="1" />
+            </div>
+            @*<div class="form-element-checkbox">
+                    <input type="checkbox" id="totalTime" name="totalTime" />
+                    <label for="totalTime">Minimum Total Time:</label>
+                    <input type="number" id="minTotalTime" name="minTotalTime" min="0" />
+                </div>*@
+            <br />
+            <div class="form-element">
+                <button type="submit">Continue</button>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function () {
+        const dashboardLink = document.getElementById('giveaway');
+        if (dashboardLink) {
+            dashboardLink.classList.add('active');
+        }
+
+        const allLinks = document.querySelectorAll('.link');
+        allLinks.forEach(link => {
+            if (link !== dashboardLink) {
+                link.classList.remove('active');
+            }
+        });
+    });
+</script>
+<script>
+    document.querySelector("#creategiv").addEventListener("click", function () {
+        document.querySelector(".popup").classList.add("active");
+    });
+
+    document.querySelector(".popup .close-btn").addEventListener("click", function () {
+        document.querySelector(".popup").classList.remove("active");
+    });
+</script>
+<script>
+    function removeGiveaway(button) {
+        var code = button.dataset.code;
+
+        var confirmation = confirm("Are you sure you want to remove this giveaway?");
+
+        if (confirmation) {
+            $.ajax({
+                url: '@Url.Action("DeleteGiveaway", "Admin")',
+                type: 'POST',
+                data: { id: code },
+                success: function (data) {
+                    if (data.success) {
+                        $("#btn[data-code='" + code + "']").closest("tr").remove();
+                        alert("Giveaway has been removed.");
+                    } else {
+                        alert("Error removing the code.");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error:", textStatus, errorThrown);
+                    alert("An error occurred. Please try again later.");
+                }
+            });
+        }
+    }
+</script>

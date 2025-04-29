@@ -1,0 +1,340 @@
+﻿@{
+    ViewBag.Title = "Dashboard - HyperFyp";
+    Layout = "~/Views/Home/_HomeLayout.cshtml";
+}
+
+<style>
+    .avtr-wlcm {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+
+        .avtr-wlcm img {
+            height: 125px;
+            width: 125px;
+            background-size: contain;
+            border-radius: 50%;
+            border: 3px solid #e7d1fe;
+        }
+
+    .dashboard {
+        background-color: #2e1b3cd9;
+        border-radius: 15px;
+        padding: 20px;
+    }
+
+    .overview {
+        padding: 10px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+    }
+
+    .vhdiv {
+        height: 110px;
+        display: flex;
+        align-items: center;
+    }
+
+    .icon {
+        color: #2e1b3cff;
+        border-radius: 25px;
+        background-color: #dcb9ff;
+        padding: 14px;
+        font-size: 30px;
+        display: flex;
+    }
+
+    .referral-icon {
+        color: #2e1b3cff;
+        border-radius: 25px;
+        background-color: #dcb9ff;
+        padding: 14px;
+        font-size: 30px;
+        display: flex;
+    }
+
+    .overview-stats {
+        display: flex;
+        flex-direction: column;
+        padding: 15px 20px 5px;
+        justify-content: space-evenly;
+    }
+
+    
+</style>
+<div class="avtr-wlcm">
+    @{
+        byte[] avatarData = Session["AccountAvatar"] as byte[];
+    }
+    <img src="data:image/png;base64,@Convert.ToBase64String(avatarData)" />
+    <span style="font-size: 30px;">Hello, <strong>@Session["UserName"]</strong>!</span>
+</div>
+<div class="dashboard">
+    <span style="font-size: calc(10px + 1vh); display: flex; align-items: center; gap: 10px;">
+        <i class='bx bx-stats bx-flip-horizontal'></i>
+        Statistics
+    </span>
+    <div class="overview">
+        <div class="vhdiv">
+            <span class="icon">
+                <i class='bx bxs-wallet'></i>
+            </span>
+            <div class="overview-stats">
+                <h4>Total Coins Earned</h4>
+                <span style="font-size: 35px; font-weight: 800">@ViewBag.Data.total_coin_earned</span>
+            </div>
+        </div>
+        <div class="vhdiv">
+            <span class="icon">
+                <i class='bx bxs-comment-check'></i>
+            </span>
+            <div class="overview-stats">
+                <h4>Total Offers Completed</h4>
+                <span style="font-size: 35px; font-weight: 800">@ViewBag.Data.total_offers_completed</span>
+            </div>
+        </div>
+        <div class="vhdiv">
+            <span class="icon">
+                <i class='bx bxs-group'></i>
+            </span>
+            <div class="overview-stats">
+                <h4>Total Users Referred</h4>
+                <span style="font-size: 35px; font-weight: 800">@ViewBag.Data.total_users_referred</span>
+            </div>
+        </div>
+        <div class="vhdiv">
+            <span class="referral-icon">
+                <i class='bx bx-link-alt' id="copy-referral"></i>
+            </span>
+            <div class="overview-stats">
+                <h4>
+                    My Referral Code
+                    <span style="padding: 1px; border-radius: 8px; font-size: 20px; cursor: pointer;" id="copy-refer" title="Copy Referral Link">
+                        <i id="c-not" class='bx bx-copy-alt'></i>
+                        <i id="c-done" class='bx bx-check-double' style="display: none;"></i>
+                    </span>
+                </h4>
+                <span id="myReferralCode" style="font-size: 25px; font-weight: 800">@Session["AccountRefCode"]</span>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .overview2 {
+        padding: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .vhdiv2 {
+        height: auto;
+        width: 100%;
+        padding: 15px;
+        background-color: #e7d1fe8a;
+        border-radius: 10px;
+    }
+
+        .vhdiv2 .header {
+            width: 100%;
+            display: grid;
+            gap: 5px;
+        }
+
+        .vhdiv2 .body {
+            width: 100%;
+            display: grid;
+            gap: 5px;
+        }
+
+            .vhdiv2 .body .requirements {
+                padding: 10px;
+                border-radius: 10px;
+                border: 2px dashed #2e1b3cf1;
+                background-color: #644c75;
+            }
+
+    .btn {
+        padding: 15px 20px;
+        border-radius: 10px;
+        border: none;
+        background-color: #644c75;
+        color: white;
+        transition: all ease-in-out 0.4s;
+        cursor: pointer;
+    }
+
+        .btn:hover {
+            background-color: #2e1b3c;
+        }
+</style>
+<div class="dashboard">
+    <span style="font-size: calc(10px + 1vh); display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+        <i class='bx bxs-gift bx-tada'></i>
+        Giveaway(s)
+    </span>
+    <div class="overview2">
+
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var giveaway in Model)
+            {
+                <div class="vhdiv2">
+                    <div class="header">
+                        <h3><span>@giveaway.title</span></h3>
+                        <p>@giveaway.description</p>
+                    </div>
+                    <br />
+                    <div class="body">
+                        <p style="display: flex; gap: 10px;">
+                            @if (giveaway.expired_on.CompareTo(DateTime.UtcNow.ToString("MMMM dd, yyyy hh:mm tt")) > 0)
+                            {
+                                <span>Will end on:</span>
+                            }
+                            else
+                            {
+                                <span>Ended at:</span>
+                            }
+                            <strong>@giveaway.expired_on</strong>
+                        </p>
+                        <p style="display: flex; gap: 10px;">Participant(s): <strong>@giveaway.participants.Count</strong></p>
+                        <p style="display: flex; gap: 10px;">No. of Winners: <strong>@giveaway.winnerCount</strong></p>
+                        <br />
+                        <div class="requirements">
+                            @if (giveaway.expired_on.CompareTo(DateTime.UtcNow.ToString("MMMM dd, yyyy hh:mm tt")) > 0)
+                            {
+                                foreach (var req in giveaway.requirements)
+                                {
+                                    if (req.isVerified == null && req.refCount == null && req.offCount == null)
+                                    {
+                                        <span>No Requirements</span>
+                                    }
+                                    else
+                                    {
+                                        <h4>Requirements:</h4>
+                                        if (req.isVerified != null)
+                                        {
+                                            <span>• Account must be verified</span><br />
+                                        }
+                                        if (req.refCount != null)
+                                        {
+                                            <span>• Referred Users must be at least <strong>@req.refCount</strong></span><br />
+                                        }
+                                        if (req.offCount != null)
+                                        {
+                                            <span>• Offers Completed must be <strong>@req.offCount</strong></span><br />
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <h4>Winner(s):</h4>
+                                <ul>
+                                    @giveaway.WinnersString
+                                </ul>
+                            }
+                        </div>
+                    </div>
+                    @{
+                        var userName = Session["UserName"] as string;
+                        var isJoined = giveaway.participants != null && giveaway.participants.Contains(userName);
+                        var hasExpired = giveaway.expired_on.CompareTo(DateTime.UtcNow.ToString("MMMM dd, yyyy hh:mm tt")) < 0;
+                    }
+
+                    @if (!hasExpired)
+                    {
+                        <br />
+                        <button class="btn" id="btn-@giveaway.id" data-id="@giveaway.id"
+                                onclick="@(isJoined ? "" : "joinGiveaway(this)")"
+                                @(isJoined ? "disabled" : "")>
+                            @(isJoined ? "Joined" : "Join Giveaway")
+                        </button>
+                    }
+                </div>  
+            }
+        }
+        else
+        {
+            <p>There are no giveaways listed.</p>
+        }
+    </div>
+    <script>
+        function joinGiveaway(button) {
+            var id = button.dataset.id;
+
+            $.ajax({
+                url: '@Url.Action("JoinGiveaway", "Home")',
+                type: 'POST',
+                data: { id: id },
+                success: function (data) {
+                    if (data.success) {
+                        alert(data.message);
+
+                        button.disabled = true;
+                        button.textContent = "Joined";
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while joining the giveaway.");
+                }
+            });
+        }
+    </script>
+</div>
+<div style="padding: 15px; border-radius: 15px; background-color: #2e1b3cd9; color: #e7d1fe">
+    <h3>Paid Ads</h3>
+    <div id="container-308103a62b094028c406e807c8fdd20f"></div>
+</div>
+<script async="async" data-cfasync="false" src="//pl23174326.cpmrevenuegate.com/308103a62b094028c406e807c8fdd20f/invoke.js"></script>
+<script>
+    const copyRefer = document.getElementById('copy-refer'); // Assuming you still have this element
+    const copyIcon = document.getElementById('c-not');
+    const doneIcon = document.getElementById('c-done');
+    const referralCodeElement = document.getElementById('myReferralCode');
+
+    // Function to copy text to clipboard
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText("https://www.hyperfyp.com/register?r=" + text)
+            .then(() => {
+                console.log('Referral code copied!'); // Optional success message
+            })
+            .catch(err => {
+                console.error('Could not copy code: ', err); // Optional error message
+            });
+    }
+
+    copyRefer.addEventListener('click', function () {
+        const referralCode = referralCodeElement.textContent;
+        copyToClipboard(referralCode);
+
+        // Animation behavior
+        copyIcon.style.display = 'none';
+        doneIcon.style.display = 'inline-block';
+
+        setTimeout(function () {
+            copyIcon.style.display = 'inline-block';
+            doneIcon.style.display = 'none';
+        }, 2000);
+    });
+
+</script>
+<script>
+    window.addEventListener('load', function () {
+        const dashboardLink = document.getElementById('macnt');
+        if (dashboardLink) {
+            dashboardLink.classList.add('active');
+        }
+
+        const allLinks = document.querySelectorAll('.link');
+        allLinks.forEach(link => {
+            if (link !== dashboardLink) {
+                link.classList.remove('active');
+            }
+        });
+    });
+</script>

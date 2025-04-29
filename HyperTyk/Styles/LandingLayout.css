@@ -1,0 +1,191 @@
+﻿::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #7b84ac;
+}
+
+@media screen and (max-width: 775px) {
+    .body-1 {
+        height: 85vh;
+        text-align: center;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+}
+@media screen and (min-width: 775px) {
+    .body-1 {
+        height: 85vh;
+        text-align: center;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+}
+    /*
+@media screen and (min-width: 776px) {
+    .body {
+        margin-top: 100px;
+    }
+}*/
+
+    body {
+        min-width: 350px;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: #260044ff url(../Items/bg3.png) no-repeat fixed;
+        background-size: cover;
+    }
+
+
+    .navbar {
+        background-color: transparent;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        backdrop-filter: blur(12px);
+    }
+
+.nav-links {
+    list-style-type: none;
+    padding: unset;
+}
+
+.cssbuttons-io-button {
+    background: #9c65ed;
+    color: white;
+    font-family: inherit;
+    padding: 0.35em;
+    padding-left: 1.2em;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 0.9em;
+    border: none;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    box-shadow: inset 0 0 1.6em -0.6em #714da6;
+    overflow: hidden;
+    position: relative;
+    height: 2.8em;
+    padding-right: 3.3em;
+    cursor: pointer;
+}
+
+    .cssbuttons-io-button .icon {
+        background: white;
+        margin-left: 1em;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 2.2em;
+        width: 2.2em;
+        border-radius: 0.7em;
+        box-shadow: 0.1em 0.1em 0.6em 0.2em #7b52b9;
+        right: 0.3em;
+        transition: all 0.3s;
+    }
+
+    .cssbuttons-io-button:hover .icon {
+        width: calc(100% - 0.6em);
+    }
+
+    .cssbuttons-io-button .icon svg {
+        width: 1.1em;
+        transition: transform 0.3s;
+        color: #7b52b9;
+    }
+
+    .cssbuttons-io-button:hover .icon svg {
+        transform: translateX(0.1em);
+    }
+
+    .cssbuttons-io-button:active .icon {
+        transform: scale(0.95);
+    }
+
+
+    .logo img {
+        max-width: 250px;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .center-div {
+        height: auto;
+        width: 100%;
+    }
+
+        .center-div .inside {
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            backdrop-filter: brightness(0.5);
+        }
+
+    footer {
+        color: white;
+        min-height: 300px;
+        padding: 25px 40px;
+        display: flex;
+        backdrop-filter: blur(12px);
+        background: rgb(157, 63, 194);
+        background: -moz-linear-gradient(120deg, rgba(157, 63, 194, 0.2) 41%, rgba(111, 20, 147, 0.2) 76%, rgba(99, 0, 136, 0.27494747899159666) 100%);
+        background: -webkit-linear-gradient(120deg, rgba(157, 63, 194, 0.2) 41%, rgba(111, 20, 147, 0.2) 76%, rgba(99, 0, 136, 0.27494747899159666) 100%);
+        background: linear-gradient(120deg, rgba(157, 63, 194, 0.2) 41%, rgba(111, 20, 147, 0.2) 76%, rgba(99, 0, 136, 0.27494747899159666) 100%);
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-evenly;
+        /* text-align: center; */
+        /* align-content: center; */
+        gap: 60px;
+    }
+
+        footer .footer-row {
+            display: flex;
+            box-sizing: border-box;
+            max-width: 100%;
+            min-width: 0px;
+            min-height: 0px;
+            flex-direction: column;
+            text-align: center;
+            gap: 20px;
+        }
+
+        footer .footer-row2 {
+            display: flex;
+            box-sizing: border-box;
+            max-width: 100%;
+            min-width: 0px;
+            min-height: 0px;
+            gap: 100px;
+            flex-wrap: wrap;
+        }
+
+            footer .footer-row2 .footer-sub-row {
+                display: flex;
+                box-sizing: border-box;
+                max-width: 100%;
+                min-width: 0px;
+                min-height: 0px;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+    .footer-logo img {
+        max-width: 200px;
+        height: auto;
+        object-fit: contain;
+    }
+

@@ -1,0 +1,255 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.hyperfyp.com/">
+    <meta property="og:site_name" content="HyperFyp">
+    <meta property="og:title" content="HyperFyp: Boost & Reward Your Online Presence">
+    <meta name="og:description" content="Elevate your social media presence, earn rewards! Take surveys, read blogs, and join giveaways & events to boost your profiles. Join us now!" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HyperFyp: Boost & Reward Your Online Presence">
+    <meta name="twitter:description" content="Elevate your social media presence, earn rewards! Take surveys, read blogs, and join giveaways & events to boost your profiles. Join us now!" />
+    <meta name="twitter:image" content="~/Items/thumbnail2.png">
+    <meta name="keywords" content="social media, growth, rewards, surveys, blogs, giveaways, events, boosting, engagement, hyper fyp, hyperfyp, hyperfyp.com, hyper tiktok, tiktok">
+    <meta name="description" content="Elevate your social media presence, earn rewards! Take surveys, read blogs, and join giveaways & events to boost your profiles. Join us now!" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Styles/AdminLayout.css")
+    @Styles.Render("~/Styles/Notification.css")
+    <link />
+</head>
+<body>
+    <div class="notification-container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="notification error-notification" id="passwordMismatch">
+                @TempData["ErrorMessage"]
+                <i class='bx bx-x close'></i>
+            </div>
+        }
+        else if (TempData["SuccessMessage"] != null)
+        {
+            <div class="notification success-notification" id="passwordMismatch2">
+                @TempData["SuccessMessage"]
+                <i class='bx bx-x close'></i>
+            </div>
+        }
+    </div>
+    <nav>
+        <a href="@Url.Action("Index", "Landing")">
+            <img class="logo" src="~/Items/hypertic.png" alt="HyperFyp.com" />
+        </a>
+        <ul class="nav-links">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li>
+                    <div class="account">
+                        <div class="account-info">
+                            <div class="stats">
+                                <span style="display: flex; align-items: center; gap: 10px;">
+                                    @{
+                                        byte[] avatarData = Session["AccountAvatar"] as byte[];
+                                    }
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(avatarData)" class="avatar" />
+                                    <span style="display: flex; align-items: center; gap: 3px;">
+                                        @{
+                                            var userName = Session["UserName"] as string;
+                                            var capitalizedUsername = char.ToUpper(userName[0]) + userName.Substring(1);
+                                            var verificationStatus = (int)Session["isVerified"] == 1 ? "<i style='font-size: 15px; color: #5cfb55;' class='bx bxs-check-circle' title='Verified'></i>" : "";
+                                        }
+                                        <strong> @capitalizedUsername</strong> @Html.Raw(verificationStatus)
+                                        @*<br />
+            <span style="display: flex; align-items: center; gap: 3px;"></span>*@   
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="sub-menu-wrap" id="subMenu">
+                                <div class="sub-menu">
+                                    <a href="@Url.Action("Settings", "Admin")" class="sub-menu-link">
+                                        <i class='bx bx-cog'></i>
+                                        <p>Account Settings</p>
+                                        <span>></span>
+                                    </a>
+                                    <a onclick="logout()" class="sub-menu-link">
+                                        <i class='bx bx-log-out'></i>
+                                        <p>Log Out</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <i style="font-size: 25px; cursor: pointer;" class='bx bxs-cog' onclick="toggleMenu()"></i>
+                            <ul class="nav-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Index", "Admin")"><i class='bx bxs-group'></i><h3>User Management</h3></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Staff", "Admin")"><i class='bx bxs-group'></i><h3>Staff Management</h3></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Promo_Codes", "Admin")"><i class='bx bxs-coupon'></i><h3>Manage Promo Codes</h3></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Social_Services", "Admin")"><i class='bx bxs-book-content'></i><h3>Manage Services</h3></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Giveaway", "Admin")"><i class='bx bxs-book-content'></i><h3>Manage Giveaways</h3></a>
+                                </li>
+                            </ul>
+                            <div class="hamburger">
+                                <span class="bar"></span>
+                                <span class="bar"></span>
+                                <span class="bar"></span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li>    
+                    <button class="sign-in" href="@Url.Action("Login", "Landing")">
+                        <ion-icon name="person"></ion-icon>
+                        <span>Log In</span>
+                    </button>
+                </li>
+            }
+        </ul>
+    </nav>
+    <div class="body-content">
+        <aside>
+            <div class="menu_title flex">
+                <span class="user"></span>
+            </div>
+            <ul class="menu_item">
+                <li class="item">
+                    <a href="@Url.Action("Index", "Admin")" id="user" class="link flex">
+                        <i class='bx bxs-group'></i>
+                        <span>User(s)</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="@Url.Action("Staff", "Admin")" id="staff" class="link flex">
+                        <i class='bx bxs-group'></i>
+                        <span>Staff(s)</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="menu_title flex">
+                <span class="manage"></span>
+            </div>
+            <ul class="menu_item">
+                <li class="item">
+                    <a href="@Url.Action("Promo_Codes", "Admin")" id="promo" class="link flex">
+                        <i class='bx bxs-coupon'></i>
+                        <span>Promo Code</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="@Url.Action("Social_Services", "Admin")" id="social" class="link flex">
+                        <i class='bx bxs-book-content'></i>
+                        <span>Social Service</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="@Url.Action("Giveaway", "Admin")" id="giveaway" class="link flex">
+                        <i class='bx bxs-gift'></i>
+                        <span>Giveaway</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        <div class="inside-body-content">
+            @*<div class="ads-container">
+                    <div class="ads-content">
+                        CUSTOMER's ADS HERE
+                    </div>
+                    <div class="ads-content">
+                        CUSTOMER's ADS HERE
+                    </div>
+                    <div class="ads-content">
+                        CUSTOMER's ADS HERE
+                    </div>
+                </div>*@
+            <div class="content-inside-body-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <script>
+        async function logout() {
+            try {
+                const response = await fetch("@Url.Action("Logout", "Landing")");
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = '@Url.Action("Login", "Landing")';
+                }
+
+            } catch (error) {
+            }
+        }
+
+        let subMenu = document.getElementById("subMenu");
+
+        function toggleMenu() {
+            subMenu.classList.toggle("open");
+            if (subMenu.classList.contains("open")) {
+                subMenu.style.maxHeight = subMenu.scrollHeight + "px";
+            } else {
+                subMenu.style.maxHeight = 0;
+            }
+        }
+    </script>
+    <script>
+        window.onload = function () {
+            var errorAlert = document.getElementById('passwordMismatch');
+            var successAlert = document.getElementById('passwordMismatch2');
+
+            function hideNotification(notification) {
+                var container = notification.parentElement;
+                container.style.animation = 'slideOut 0.5s ease forwards';
+                container.addEventListener('animationend', function () {
+                    container.style.display = 'none';
+                });
+            }
+
+            if (errorAlert) {
+                errorAlert.querySelector('.close').addEventListener('click', function () {
+                    hideNotification(errorAlert);
+                });
+                setTimeout(function () {
+                    hideNotification(errorAlert);
+                }, 4000);
+            } else if (successAlert) {
+                successAlert.querySelector('.close').addEventListener('click', function () {
+                    hideNotification(successAlert);
+                });
+                setTimeout(function () {
+                    hideNotification(successAlert);
+                }, 4000);
+            }
+        };
+    </script>
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("live");
+            navMenu.classList.toggle("live");
+        });
+    </script>
+</body>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+</html>

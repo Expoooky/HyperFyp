@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="48fa9293e7ee4ae889d91161a36cb341" Name="Diagram1" ShowGrid="true" ZoomLevel="69">
+        <EntityTypeShape EntityType="hypertykModel.auth" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="hypertykModel.account" Width="1.5" PointX="3" PointY="5.875" />
+        <AssociationConnector Association="hypertykModel.FK_account_auth" />
+        <EntityTypeShape EntityType="hypertykModel.promo_codes" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="hypertykModel.auth_chng_password" Width="1.5" PointX="3" PointY="10.25" />
+        <AssociationConnector Association="hypertykModel.FK_auth_chng_password_auth" />
+        <EntityTypeShape EntityType="hypertykModel.auth_req_forgot" Width="1.5" PointX="5.75" PointY="1" />
+        <EntityTypeShape EntityType="hypertykModel.promo_redemption_logs" Width="1.5" PointX="3" PointY="2.125" />
+        <AssociationConnector Association="hypertykModel.FK_promo_redemption_logs_auth" />
+        <AssociationConnector Association="hypertykModel.FK_promo_redemption_logs_promo_codes" />
+        <EntityTypeShape EntityType="hypertykModel.social_service" Width="1.5" PointX="5.75" PointY="5" />
+        <EntityTypeShape EntityType="hypertykModel.social_orders" Width="1.5" PointX="7.75" PointY="1" />
+        <EntityTypeShape EntityType="hypertykModel.referral_log" Width="1.5" PointX="7.5" PointY="5" />
+        <EntityTypeShape EntityType="hypertykModel.auth_req_verify" Width="1.5" PointX="9.625" PointY="1" />
+        <EntityTypeShape EntityType="hypertykModel.account_referrer" Width="1.5" PointX="5.75" PointY="7.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

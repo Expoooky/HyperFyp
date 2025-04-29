@@ -1,0 +1,391 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.hyperfyp.com/">
+    <meta property="og:site_name" content="HyperFyp">
+    <meta property="og:title" content="HyperFyp: Boost & Reward Your Online Presence">
+    <meta name="og:description" content="Elevate your social media presence, earn rewards! Take surveys, read blogs, and join giveaways & events to boost your profiles. Join us now!" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HyperFyp: Boost & Reward Your Online Presence">
+    <meta name="twitter:description" content="Elevate your social media presence, earn rewards! Take surveys, read blogs, and join giveaways & events to boost your profiles. Join us now!" />
+    <meta name="twitter:image" content="~/Items/thumbnail2.png">
+    <meta name="keywords" content="social media, growth, rewards, surveys, blogs, giveaways, events, boosting, engagement, hyper fyp, hyperfyp, hyperfyp.com, hyper tiktok, tiktok">
+    <meta name="description" content="Elevate your social media presence, earn rewards! Take surveys, read blogs, and join giveaways & events to boost your profiles. Join us now!" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Styles/HomeLayout.css")
+    @Styles.Render("~/Styles/Notification.css")
+    <link />
+</head>
+<body>
+    <div class="notification-container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="notification error-notification" id="passwordMismatch">
+                @TempData["ErrorMessage"]
+                <i class='bx bx-x close'></i>
+            </div>
+        }
+        else if (TempData["SuccessMessage"] != null)
+        {
+            <div class="notification success-notification" id="passwordMismatch2">
+                @TempData["SuccessMessage"]
+                <i class='bx bx-x close'></i>
+            </div>
+        }
+    </div>
+    <nav>
+        <a href="@Url.Action("Index", "Landing")">
+            <img class="logo" src="~/Items/hypertic.png" alt="HyperFyp.com" />
+        </a>
+        <ul class="nav-links">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li>
+                    <div class="account">
+                        <div class="account-info">
+                            <div class="stats">
+                                <span style="display: flex; align-items: center; gap: 10px;">
+                                    @{
+                                        byte[] avatarData = Session["AccountAvatar"] as byte[];
+                                    }
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(avatarData)" class="avatar" />
+                                    <span style="display: flex; align-items: center; gap: 3px;">
+                                        @{
+                                            var userName = Session["UserName"] as string;
+                                            var capitalizedUsername = char.ToUpper(userName[0]) + userName.Substring(1);
+                                            var verificationStatus = (int)Session["isVerified"] == 1 ? "<i style='font-size: 15px; color: #5cfb55;' class='bx bxs-check-circle' title='Verified'></i>" : "";
+                                        }
+                                        <strong> @capitalizedUsername</strong> @Html.Raw(verificationStatus)
+                                        @*<br />
+                                            <span style="display: flex; align-items: center; gap: 3px;"></span>*@
+                                    </span>
+                                </span>
+                                <div class="account-coins">
+                                    <i style="color: #fec160" class='bx bxs-coin-stack'></i>
+                                    @{
+                                        double? coinsValue = ViewBag.Data.coins; // Assuming you're passing the coins value to the view via ViewBag
+                                        string formattedCoins = coinsValue?.ToString("0.00");
+                                    }
+                                    <span style="font-size: 16px; font-weight: 600;">@formattedCoins</span>
+                                </div>
+                            </div>
+                            <div class="sub-menu-wrap" id="subMenu">
+                                <div class="sub-menu">
+                                    <a href="@Url.Action("Settings", "Home")" class="sub-menu-link">
+                                        <i class='bx bx-cog'></i>
+                                        <p>Account Settings</p>
+                                        <span>></span>
+                                    </a>
+                                    <a onclick="logout()" class="sub-menu-link">
+                                        <i class='bx bx-log-out'></i>
+                                        <p>Log Out</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <i style="font-size: 25px; cursor: pointer;" class='bx bxs-cog' onclick="toggleMenu()"></i>
+                            <ul class="nav-menu">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Index", "Home")"><i class='bx bxs-user'></i><h3>My Account</h3></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Socials", "Home")"><i class='bx bxl-tiktok bx-tada'></i><h3>Social Boosting</h3></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Redeem", "Home")"><i class='bx bxs-coin-stack'></i><h3>Top Up</h3></a>
+                                </li>
+                                @*<li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Giveaway", "Home")"><i class='bx bxs-book-content'></i><h3>Giveaway</h3></a>
+                                </li>*@
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Surveys", "Home")"><i class='bx bx-list-check'></i><h3>Survey</h3></a>
+                                </li>
+                                @*<li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Blogs", "Home")"><i class='bx bxs-quote-left'></i><h3>Blogs</h3></a>
+                                </li>*@
+                            </ul>
+                            <div class="hamburger">
+                                <span class="bar"></span>
+                                <span class="bar"></span>
+                                <span class="bar"></span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <button class="sign-in" href="@Url.Action("Login", "Landing")">
+                        <ion-icon name="person"></ion-icon>
+                        <span>Log In</span>
+                    </button>
+                </li>
+            }
+        </ul>
+    </nav>
+    <div class="body-content">
+        <aside>
+            <ul class="menu_item">
+                <li class="item">
+                    <a href="@Url.Action("Index", "Home")" id="macnt" class="link flex">
+                        <i class='bx bxs-user'></i>
+                        <span>My Account</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="@Url.Action("Socials", "Home")" id="ttrl" class="link flex">
+                        <i class='bx bxl-tiktok bx-tada'></i>
+                        <span>Boost me!</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="@Url.Action("Redeem", "Home")" id="rdem" class="link flex">
+                        <i class='bx bxs-coin-stack'></i>
+                        <span>Redeem</span>
+                    </a>
+                </li>
+                @*<li class="item">
+                    <a href="@Url.Action("Giveaway", "Home")" id="giveaway" class="link flex">
+                        <i class='bx bxs-gift'></i>
+                        <span>Giveaway</span>
+                    </a>
+                </li>*@
+            </ul>
+            <div class="menu_title flex">
+                <span class="monetization"></span>
+            </div>
+            <ul class="menu_item">
+                <li class="item">
+                    <a href="@Url.Action("Surveys", "Home")" id="srvy" class="link flex">
+                        <i class='bx bx-list-check'></i>
+                        <span>Survey</span>
+                    </a>
+                </li>
+                @*<li class="item">
+                    <a href="@Url.Action("Blogs", "Home")" id="blogs" class="link flex">
+                        <i class='bx bxs-quote-left'></i>
+                        <span>Blogs</span>
+                    </a>
+                </li>*@
+            </ul>
+            <div class="menu_title flex">
+                <span class="support"></span>
+            </div>
+            <ul class="menu_item">
+                <li class="item">
+                    <a href="https://discord.gg/hyperfyp" class="link flex">
+                        <i class='bx bxl-discord-alt'></i>
+                        <span>Discord</span>
+                    </a>
+                </li>
+                <li class="item">
+                    <a href="mailto:fyphyper@gmail.com" class="link flex">
+                        <i class='bx bxs-envelope'></i>
+                        <span>Email Us</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        <div class="inside-body-content">
+            @*<div class="ads-container">
+                    <div class="ads-content">
+                        CUSTOMER's ADS HERE
+                    </div>
+                    <div class="ads-content">
+                        CUSTOMER's ADS HERE
+                    </div>
+                    <div class="ads-content">
+                        CUSTOMER's ADS HERE
+                    </div>
+                </div>*@
+            <div class="content-inside-body-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <style>
+        .time-placeholder {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+        }
+
+            .time-placeholder .time-parent {
+                padding: 5px 10px;
+                border-radius: 15px;
+                border: 2px solid #d7dfffff;
+                background: #2a004bff;
+            }
+
+        #timer-placeholder {
+            display: flex;
+            gap: 5px;
+        }
+
+        .timer-reward {
+            margin-right: 5px;
+        }
+
+
+            .timer-reward #coinreward {
+                position: absolute;
+                font-size: small;
+                right: 8px;
+                bottom: 3px;
+            }
+    </style>
+    <div class="time-placeholder">
+        <div class="time-parent">
+            <h3 id="timer-placeholder">
+                <a id="timer">00:00</a>
+                <span class="timer-reward">
+                    <i style="color: #fec160" class="bx bxs-coin-stack"></i>
+                    <i id="coinreward">+15</i>
+                </span>
+            </h3>
+        </div>
+    </div>
+    <script>
+        const timerElement = document.getElementById("timer");
+        const coinRewardElement = document.getElementById("coinreward");
+        const username = "@(Session["UserName"] as string)";
+        let timeRemaining;
+        let timerInterval;
+
+        function initializeTimer() {
+            const storedTime = sessionStorage.getItem("timeRemaining");
+            timeRemaining = storedTime ? parseInt(storedTime) : 15 * 60;
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                if (timeRemaining > 0 && document.visibilityState === 'visible') {
+                    timeRemaining--;
+                    updateTimerDisplay();
+                    sessionStorage.setItem("timeRemaining", timeRemaining);
+                } else if (timeRemaining === 0) {
+                    clearInterval(timerInterval);
+                    timerElement.textContent = "00:00";
+                    $.ajax({
+                        url: "@Url.Action("AddCoins", "Home")",
+                        type: "POST",
+                        data: { username: username },
+                        success: function (response) {
+                            timeRemaining = 15 * 60;
+                            updateTimerDisplay();
+                            sessionStorage.setItem("timeRemaining", timeRemaining);
+                            startTimer();
+                        },
+                        error: function () {
+                            console.error("Error updating coins.");
+                        }
+                    });
+                }
+            }, 1000);
+        }
+
+        // Event listener for tab visibility change
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === 'visible') {
+                startTimer();
+            } else {
+                clearInterval(timerInterval);
+            }
+        });
+
+        // Initialize the timer
+        initializeTimer();
+
+        // Start the timer if not zero and tab is visible
+        if (timeRemaining > 0 && document.visibilityState === 'visible') {
+            startTimer();
+        }
+
+    </script>
+    <script>
+        async function logout() {
+            try {
+                const response = await fetch("@Url.Action("Logout", "Landing")");
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = '@Url.Action("Login", "Landing")';
+                }
+
+            } catch (error) {
+            }
+        }
+
+        let subMenu = document.getElementById("subMenu");
+
+        function toggleMenu() {
+            subMenu.classList.toggle("open");
+            if (subMenu.classList.contains("open")) {
+                subMenu.style.maxHeight = subMenu.scrollHeight + "px";
+            } else {
+                subMenu.style.maxHeight = 0;
+            }
+        }
+
+        window.onload = function () {
+            var errorAlert = document.getElementById('passwordMismatch');
+            var successAlert = document.getElementById('passwordMismatch2');
+
+            function hideNotification(notification) {
+                var container = notification.parentElement;
+                container.style.animation = 'slideOut 0.5s ease forwards';
+                container.addEventListener('animationend', function () {
+                    container.style.display = 'none';
+                });
+            }
+
+            if (errorAlert) {
+                errorAlert.querySelector('.close').addEventListener('click', function () {
+                    hideNotification(errorAlert);
+                });
+                setTimeout(function () {
+                    hideNotification(errorAlert);
+                }, 4000);
+            } else if (successAlert) {
+                successAlert.querySelector('.close').addEventListener('click', function () {
+                    hideNotification(successAlert);
+                });
+                setTimeout(function () {
+                    hideNotification(successAlert);
+                }, 4000);
+            }
+        };
+    </script>
+    <script>
+        const hamburger = document.querySelector(".hamburger");
+        const navMenu = document.querySelector(".nav-menu");
+
+        hamburger.addEventListener("click", () => {
+            hamburger.classList.toggle("live");
+            navMenu.classList.toggle("live");
+        });
+    </script>
+</body>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+</html>

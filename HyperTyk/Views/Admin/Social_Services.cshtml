@@ -1,0 +1,312 @@
+﻿
+@{
+    ViewBag.Title = "Manage Services";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        table thead {
+            background-color: #034b0093;
+        }
+
+            table thead tr {
+            }
+
+                table thead tr th {
+                    font-size: 14px;
+                    letter-spacing: 0.35px;
+                    padding: 5px;
+                    text-align: start;
+                }
+
+        table tbody tr td {
+            font-size: 14px;
+            letter-spacing: 0.35px;
+            background-color: #809d813f;
+            padding: 8px;
+            text-align: start;
+            transition: all 0.15s ease-in-out;
+        }
+
+        table tbody tr:hover td {
+            color: black;
+            background-color: #ffffff3f;
+        }
+
+    .edit {
+        background-color: #02ac00cf;
+    }
+
+    .remove {
+        background-color: #ff0000cf;
+    }
+
+    #addservice {
+        padding: 10px 25px;
+        border-radius: 35px;
+        background-color: #44a743;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: #ffffff;
+        transition: background-color 0.4s ease;
+    }
+
+        #addservice:hover {
+            background-color: #153515;
+        }
+</style>
+<div style="width: 100%; display: inline-flex; align-items: center; justify-content: space-between; flex-wrap: wrap">
+    <h1>Manage Social Services</h1>
+    <button id="addservice">Add New Service</button>
+</div>
+<div class="container">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Service ID</th>
+                    <th>Item</th>
+                    <th>Item Description</th>
+                    <th>Rate</th>
+                    <th>Estimated Time</th>
+                    <th>Fast-Lane Est. Time</th>
+                    <th>Fast-Lane Rate</th>
+                    <th>Action(s)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    foreach (var service in Model)
+                    {
+                        <tr>
+                            <td data-label="Service ID"><strong>@service.service_id</strong></td>
+                            <td data-label="Item">@service.item</td>
+                            <td data-label="Item Desc.">@service.item_desc</td>
+                            <td data-label="Rate">@service.rate <i style="color: #ffc300" class='bx bxs-coin-stack'></i></td>
+                            <td data-label="Estimated Time">@service.interval min(s)</td>
+                            <td data-label="FL-ETA">@service.fast_lane_interval min(s)</td>
+                            <td data-label="FL-Rate">@service.fast_lane_interval_rate%</td>
+                            <td data-label="Action(s)">
+                                <button class="remove" id="btn" data-service="@service.service_id" onclick="removeService(this)">
+                                    <p id="tooltiptext">Delete</p>
+                                    <i style="display: flex; justify-content: center; align-items: center; font-weight: 900" class='bx bxs-trash'></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr><td colspan="10" style="text-align: center; padding-left: unset;">No Services found.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<style>
+    .popup {
+        width: 500px;
+        max-width: 100%;
+        color: black;
+        position: absolute;
+        top: -150%;
+        left: 50%;
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.25);
+        padding: 20px;
+        background: #fff;
+        box-shadow: 2px 2px 5px 5px rgba(0,0,0,0.15);
+        border-radius: 15px;
+        transition: top 0ms ease-in-out 0.2s, opacity 0.2s ease-in-out 0s, transform 0.2s ease-in-out 0s;
+    }
+
+        .popup.active {
+            top: 50%;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            transition: top 0s ease-in-out 0s, opacity 0.2s ease-in-out 0s, transform 0.2s ease-in-out 0s;
+        }
+
+        .popup .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 25px;
+            height: 25px;
+            background: #888;
+            color: #eee;
+            text-align: center;
+            line-height: 25px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        .popup .form h2 {
+            text-align: center;
+            color: #222;
+            margin: 10px 0px 20px;
+            font-size: 25px;
+        }
+
+        .popup .form .form-element {
+            margin: 15px 0px 0px 0px;
+        }
+
+            .popup .form .form-element label {
+                font-size: 14px;
+                color: #222;
+            }
+
+            .popup .form .form-element input[type="text"],
+            .popup .form .form-element input[type="number"],
+            .popup .form .form-element input[type="datetime-local"] {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-bottom: 2px solid #dcdcdc;
+                border-radius: 15px;
+                font-size: 14px;
+                background-color: #effbee;
+                box-sizing: border-box;
+            }
+
+            .popup .form .form-element input[type="text"],
+            .popup .form .form-element input[type="number"],
+            .popup .form .form-element input[type="datetime-local"] {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-bottom: 2px solid #dcdcdc;
+                border-radius: 15px;
+                font-size: 14px;
+                background-color: #effbee;
+                box-sizing: border-box;
+            }
+
+            .popup .form .form-element button {
+                width: 100%;
+                height: 40px;
+                border: none;
+                outline: none;
+                font-size: 15px;
+                background: #023000;
+                color: #f5f5f5;
+                border-radius: 15px;
+                cursor: pointer;
+                transition: all 0.25s ease-in-out;
+            }
+
+                .popup .form .form-element button:hover {
+                    background: #0230007b;
+                    color: black;
+                }
+</style>
+<div class="popup">
+    <div class="close-btn">&times;</div>
+    <div class="form">
+        @using (Html.BeginForm("AddService", "Admin", FormMethod.Post))
+        {
+            <h2>Add a Service</h2>
+            <div style="display: flex; gap: 20px;">
+                <div class="form-element">
+                    <label for="service_id">Service ID</label>
+                    <input type="number" id="service_id" name="service_id" placeholder="00000000" min="0" required" />
+                </div>
+                <div class="form-element">
+                    <label for="item">Item</label>
+                    <input type="text" id="item" name="item" placeholder="TikTok Views" required />
+                </div>
+            </div>
+            <div class="form-element">
+                <label for="item_desc">Item Description</label>
+                <input type="text" id="item_desc" name="item_desc" placeholder="Boost your Views" required />
+            </div>
+            <div style="display: flex; gap: 20px;">
+                <div class="form-element">
+                    <label for="rate">Rate (Amount per 1 <i style="color: #c69b58" class='bx bxs-coin-stack'></i>)</label>
+                    <input type="number" id="rate" name="rate" placeholder="0" min="0" required />
+                </div>
+                <div class="form-element">
+                    <label for="interval">Estimated Time</label>
+                    <input type="number" name="interval" id="interval" placeholder="30" min="0" required />
+                </div>
+            </div>
+            <div style="display: flex; gap: 20px;">
+                <div class="form-element">
+                    <label for="fast_lane_interval">Fast-Lane Estimated Time</label>
+                    <input type="number" name="fast_lane_interval" id="fast_lane_interval" placeholder="9" min="0" required />
+                </div>
+                <div class="form-element">
+                    <label for="fast_lane_interval_rate">Fast-Lane Rate (Percentage)</label>
+                    <input type="number" name="fast_lane_interval_rate" id="fast_lane_interval_rate" placeholder="15" min="0" required />
+                </div>
+            </div>
+            
+            <br />
+            <div class="form-element">
+                <button type="submit">Continue</button>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    window.addEventListener('load', function () {
+        const dashboardLink = document.getElementById('social');
+        if (dashboardLink) {
+            dashboardLink.classList.add('active');
+        }
+
+        const allLinks = document.querySelectorAll('.link');
+        allLinks.forEach(link => {
+            if (link !== dashboardLink) {
+                link.classList.remove('active');
+            }
+        });
+    });
+</script>
+<script>
+    function removeService(button) {
+        var service = button.dataset.service;
+
+        // Display a confirmation dialog
+        var confirmation = confirm("Are you sure you want to remove this service?");
+
+        if (confirmation) {
+            // Proceed with the ban operation
+            $.ajax({
+                url: '@Url.Action("DeleteService", "Admin")',
+                type: 'POST',
+                data: { service: service },
+                success: function (data) {
+                    if (data.success) {
+                        $("#btn[data-service='" + service + "']").closest("tr").remove();
+                        alert("Service has been removed.");
+                    } else {
+                        alert("Error removing the service."); // Handle error message from controller (optional)
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error:", textStatus, errorThrown); // Log errors to console
+                    alert("An error occurred. Please try again later."); // User-friendly error message
+                }
+            });
+        }
+    }
+</script>
+<script>
+    document.querySelector("#addservice").addEventListener("click", function () {
+        document.querySelector(".popup").classList.add("active");
+    });
+
+    document.querySelector(".popup .close-btn").addEventListener("click", function () {
+        document.querySelector(".popup").classList.remove("active");
+    });
+</script>

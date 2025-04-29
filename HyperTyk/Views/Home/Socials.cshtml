@@ -1,0 +1,320 @@
+﻿
+@{
+    ViewBag.Title = "Boost your Social Media now!";
+    Layout = "~/Views/Home/_HomeLayout.cshtml";
+}
+
+@*<div class="underconstruction">
+        <i class='bx bxs-hard-hat'></i>
+        <h3>UNDER CONSTRUCTION</h3>
+    </div>*@
+<style>
+    .order-body-parent {
+        display: flex;
+        color: black;
+        flex-wrap: wrap;
+    }
+
+    .order-body-child {
+        width: 100%;
+    }
+
+    .order-body-grandchildren {
+        display: flex;
+        gap: 20px;
+        padding: 20px 20px;
+        background-color: #fdfdfde6;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+        border-radius: 15px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+    }
+
+    .order-form {
+        width: 500px;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 10px;
+    }
+
+        .order-form h1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+    .order-list {
+        width: 800px;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 10px;
+    }
+
+        .order-list h1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+    .inputbox {
+        margin: 5px 5px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+        .inputbox label {
+            position: absolute;
+            top: -10px;
+            left: 5px;
+            color: #000000;
+            font-size: 1em;
+            pointer-events: none;
+            transition: .2s;
+        }
+
+        .inputbox input, .inputbox select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-bottom: 2px solid #dcdcdc;
+            border-radius: 15px;
+            font-size: 14px;
+            background-color: #f4eefb;
+            box-sizing: border-box;
+        }
+
+            .inputbox input:focus + label, .inputbox input:not(:placeholder-shown) + label, .inputbox select:focus + label, .inputbox select:not(:placeholder-shown) + label {
+                bottom: 50px;
+                font-size: 14px;
+                color: #333;
+            }
+
+            .inputbox input:focus, .inputbox input:not(:placeholder-shown), .inputbox select:focus, .inputbox select:not(:placeholder-shown) {
+                border-bottom-color: #9a00c7;
+            }
+
+    .settings-button {
+        padding: 10px 25px;
+        border-radius: 35px;
+        background-color: #5b43a7;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: #ffffff;
+        transition: background-color 0.4s ease;
+    }
+
+        .settings-button:hover {
+            background-color: #1d1535;
+        }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        table thead {
+            background-color: #fff;
+        }
+
+            table thead tr {
+            }
+
+                table thead tr th {
+                    font-size: 14px;
+                    letter-spacing: 0.35px;
+                    padding: 5px;
+                }
+
+        table tbody tr td {
+            font-size: 14px;
+            letter-spacing: 0.35px;
+            background-color: #f2eeff;
+            padding: 8px;
+            text-align: center;
+        }
+</style>
+<section class="order-body-parent">
+    <div class="order-body-child">
+        <div class="order-body-grandchildren">
+            <div class="order-form">
+                <h1><i class='bx bxl-tiktok'></i> <i class='bx bxl-instagram-alt'></i> Boost your Social Media <i class='bx bxl-reddit'></i> <i class='bx bxl-facebook-circle'></i></h1>
+                <br />
+                @using (Html.BeginForm("CreateOrder", "Home", FormMethod.Post))
+                {
+                    <div style="width: 100%; display: flex; gap: 20px; padding: 20px 20px; border-radius: 15px; background-color: #fff; flex-direction: column;">
+                        <div>
+                            <h4>Service</h4>
+                            <div class="inputbox">
+                                @Html.DropDownList("service_id",
+                                    new SelectList(ViewBag.SocialServicesList, "service_id", "item"), // Update here
+                                    "-- Select Service --", // Default option
+                                    new { @required = "required", @id = "service_id", @name = "service_id" })
+                            </div>
+                            <h4>Link</h4>
+                            <div class="inputbox">
+                                <input name="link" id="link" type="text" placeholder="https://www.hyperfyp.com/" required />
+                            </div>
+                            <div style="display:flex; align-items: center; gap: 10px;">
+                                <h4>Amount </h4>
+                                <span style="display: flex; align-items: center; gap: 5px">
+                                    <i style="display:flex;" class='bx bxs-coin-stack'></i>1 = <span id="rate">0</span>
+                                </span>
+                            </div>
+                            <div class="inputbox">
+                                <input name="amount" type="number" min="0" id="amount" oninput="calculateTotal()" required />
+                            </div>
+                            <h4 style="display:flex; align-items: center; gap: 5px;">Estimated Time</h4>
+                            <div class="inputbox">
+                                <input name="interval" type="number" id="interval" placeholder="-" disabled />
+                            </div>
+                            <div style="display: flex; gap: 5px;">
+                                <input type="checkbox" id="fastlane" name="fastlane" value="true">
+                                <input type="hidden" id="fastlane_value">
+                                <label for="fastlane">Fast Lane?</label>
+                                <br>
+                            </div>
+                            <br />
+                            <h4 style="display:flex; align-items: center; gap: 5px;">Total <i style="display:flex;" class='bx bxs-coin-stack'></i></h4>
+                            <div class="inputbox">
+                                <input name="total" id="total" type="number" placeholder="0" value="" readonly />
+                            </div>
+                        </div>
+                        <button type="submit" class="settings-button">Create Order</button>
+                    </div>
+                }
+            </div>
+            <div class="order-list">
+                <h1>Order(s)</h1>
+                <br />
+                <div style="width: 100%; display: flex; gap: 20px; padding: 20px 20px; border-radius: 15px; background-color: #fff; flex-direction: column;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Total <i class='bx bxs-coin-stack'></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count > 0)
+                            {
+                                foreach (var order in Model)
+                                {
+                                    <tr>
+                                        <td data-label="Order #">
+                                            @order.order_id
+                                        </td>
+                                        <td data-label="Description">
+                                            @order.item
+                                        </td>
+                                        <td data-label="Amount">
+                                            @order.amount
+                                        </td>
+                                        <td data-label="Total">
+                                            @{
+                                                double? coinsValue = order.amount_in_coins; // Assuming you're passing the coins value to the view via ViewBag
+                                                string formattedCoins = coinsValue?.ToString("0.00");
+                                            }
+                                            @formattedCoins
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="4" style="text-align: center; padding-left: unset; ">No Order(s) found.</td></tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div style="padding: 15px; border-radius: 15px; background-color: #2e1b3cd9; color: #e7d1fe">
+    <h3>Paid Ads</h3>
+    <div id="container-308103a62b094028c406e807c8fdd20f"></div>
+</div>
+<script async="async" data-cfasync="false" src="//pl23174326.cpmrevenuegate.com/308103a62b094028c406e807c8fdd20f/invoke.js"></script>
+<script>
+    window.addEventListener('load', function () {
+        const dashboardLink = document.getElementById('ttrl');
+        if (dashboardLink) {
+            dashboardLink.classList.add('active');
+        }
+
+        const allLinks = document.querySelectorAll('.link');
+        allLinks.forEach(link => {
+            if (link !== dashboardLink) {
+                link.classList.remove('active');
+            }
+        });
+    });
+</script>
+<script>
+    document.getElementById("service_id").addEventListener("change", function() {
+        var selectedServiceId = this.value; // Get the selected service_id
+        var socialServices = @Html.Raw(Json.Encode(ViewBag.SocialServicesList)); // Get the list of social services from ViewBag
+        var selectedService = socialServices.find(function(service) {
+            return service.service_id == selectedServiceId; // Find the selected service object
+        });
+        if (selectedService) {
+            document.getElementById("rate").textContent = selectedService.rate; // Update the rate
+            document.getElementById("fastlane_value").value = selectedService.fast_lane_interval_rate;
+            if (document.getElementById("fastlane").checked) {
+                document.getElementById("interval").placeholder = selectedService.fast_lane_interval + " minute(s)"; // Update the interval placeholder with fast_lane_interval
+            } else {
+                document.getElementById("interval").placeholder = selectedService.interval + " minute(s)"; // Update the interval placeholder
+            }
+            calculateTotal(); // Calculate total when rate is updated
+        } else {
+            document.getElementById("rate").textContent = "0"; // If no service is selected, set rate to 0
+            document.getElementById("total").value = "0"; // Set total to 0 when no service is selected
+        }
+    });
+
+    // Function to calculate total based on the amount of views
+    function calculateTotal() {
+        var rate = parseFloat(document.getElementById("rate").textContent);
+        var amount = parseFloat(document.getElementsByName("amount")[0].value);
+        var total = amount / rate; // Total without fast lane adjustment
+        if (document.getElementById("fastlane").checked) {
+            var fastLaneIntervalRate = parseInt(document.getElementById("fastlane_value").value);
+            total += (fastLaneIntervalRate / 100) * total; // Adjust total with fast lane interval rate
+        }
+        document.getElementById("total").value = total.toFixed(2); // Set total with 2 decimal places
+
+        // Update the value attribute of the total input element
+        document.getElementById("total").setAttribute("value", total.toFixed(2));
+    }
+
+    // Add event listener for the fast lane checkbox
+    document.getElementById("fastlane").addEventListener("change", function() {
+        var selectedServiceId = document.getElementById("service_id").value;
+        if (selectedServiceId) {
+            var socialServices = @Html.Raw(Json.Encode(ViewBag.SocialServicesList)); // Get the list of social services from ViewBag
+            var selectedService = socialServices.find(function(service) {
+                return service.service_id == selectedServiceId; // Find the selected service object
+            });
+            if (selectedService) {
+                if (this.checked) {
+                    document.getElementById("interval").placeholder = selectedService.fast_lane_interval + " minute(s)"; // Update the interval placeholder with fast_lane_interval
+                } else {
+                    document.getElementById("interval").placeholder = selectedService.interval + " minute(s)"; // Update the interval placeholder
+                }
+                calculateTotal(); // Recalculate total when fast lane option is toggled
+            }
+        }
+    });
+</script>

@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.hyperfyp.com/">
+    <meta property="og:site_name" content="HyperFyp">
+    <meta property="og:title" content="HyperFyp: Boost & Reward Your Online Presence">
+    <meta name="og:description" content="Elevate your social media presence, earn rewards! Take surveys, read blogs, and join giveaways & events to boost your profiles. Join us now!" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HyperFyp: Boost & Reward Your Online Presence">
+    <meta name="twitter:description" content="Elevate your social media presence, earn rewards! Take surveys, read blogs, and join giveaways & events to boost your profiles. Join us now!" />
+    <meta name="twitter:image" content="~/Items/thumbnail2.png">
+    <meta name="keywords" content="social media, growth, rewards, surveys, blogs, giveaways, events, boosting, engagement, hyper fyp, hyperfyp, hyperfyp.com, hyper tiktok, tiktok">
+    <meta name="description" content="Elevate your social media presence, earn rewards! Take surveys, read blogs, and join giveaways & events to boost your profiles. Join us now!" />
+    <meta name="trustpilot-one-time-domain-verification-id" content="6604dd7b-b7e5-40ba-a9dc-70a213eef9dc" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Styles/LandingLayout.css")
+    @Styles.Render("~/Styles/Notification.css")
+    <link />
+</head>
+<body>
+    <div class="notification-container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="notification error-notification" id="passwordMismatch">
+                @TempData["ErrorMessage"]
+                <i class='bx bx-x close'></i>
+            </div>
+        }
+        else if (TempData["SuccessMessage"] != null)
+        {
+            <div class="notification success-notification" id="passwordMismatch2">
+                @TempData["SuccessMessage"]
+                <i class='bx bx-x close'></i>
+            </div>
+        }
+    </div>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="@Url.Action("Index", "Landing")">
+                <img src="~/Items/hypertic.png" alt="HyperFyp.com" />
+            </a>
+        </div>
+        <ul class="nav-links" id="links">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <li>
+                    <button class="cssbuttons-io-button" onclick="window.location.href='/Login'">
+                        Dashboard
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                                <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
+                            </svg>
+                        </div>
+                    </button>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <button class="cssbuttons-io-button" onclick="window.location.href='/Login'">
+                        Log In
+                        <div class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z" />
+                                <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
+                            </svg>
+                        </div>
+                    </button>
+                </li>
+                
+            }
+        </ul>
+    </nav>
+
+    <div class="center-div">
+        @RenderBody()
+    </div>
+
+    <footer>
+        <div class="footer-row">
+            <div class="footer-logo">
+                <img src="~/Items/hypertic.png" alt="HyperFyp.com" />
+            </div>
+            <span style="font-family: 'League Spartan'"><a href="@Url.Action("Index", "Landing")" style="color: white; font-weight: bold; font-size: 40px; text-decoration: none; ">HyperFyp</a></span>
+            <span style="font-family: 'League Spartan'"> Copyright &copy; HyperFyp.</span>
+            <span style="font-family: 'League Spartan'"> Usage of VPNs is strictly forbidden.</span>
+        </div>
+        <div class="footer-row2">
+            <div class="footer-sub-row">
+                <span style="font-family: 'League Spartan', sans-serif; font-weight: bolder; font-size: 20px; ">ABOUT US</span>
+                <a href="@Url.Action("Privacy", "Landing")" style="color: white; text-decoration: none; font-family: 'League Spartan', sans-serif; font-weight: 400; font-size: 18px; ">Privacy Policy</a>
+                <a href="@Url.Action("Terms", "Landing")" style="color: white; text-decoration: none; font-family: 'League Spartan', sans-serif; font-weight: 400; font-size: 18px; ">Terms of Service</a>
+                <a href="@Url.Action("Punishment", "Landing")" style="color: white; text-decoration: none; font-family: 'League Spartan', sans-serif; font-weight: 400; font-size: 18px; ">Punishment Policy</a>
+            </div>
+            <div class="footer-sub-row">
+                <span style="font-family: 'League Spartan', sans-serif; font-weight: bolder; font-size: 20px; ">OUR COMMUNITY</span>
+                <span style="display: flex; align-items: center; gap: 5px;">
+                    <i style="font-size: 30px;" class='bx bxl-discord'></i>
+                    <a href="https://discord.gg/hyperfyp" style="color: white; text-decoration: none; font-family: 'League Spartan', sans-serif; font-weight: 400; font-size: 22px; ">Discord</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+</body>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+</html>

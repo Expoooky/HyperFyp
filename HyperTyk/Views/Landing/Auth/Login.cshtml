@@ -1,0 +1,209 @@
+﻿@model HyperTyk.Models.auth
+@{
+    ViewBag.Title = "Log In - HyperFyp";
+    Layout = "~/Views/Landing/_LandingLayout.cshtml";
+}
+<style>
+    .center-div .inside {
+        align-items: unset;
+    }
+
+    h2 {
+        font-weight: 100;
+        margin: 20px 0px 10px 40px;
+    }
+
+    .body {
+        min-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; 
+        align-items: center;
+    }
+
+    .login-box {
+        max-width: 400px;
+        width: 85%;
+        margin: 10px auto;
+        padding: 40px 20px 40px 20px;
+        border: 1px solid #442551;
+        border-radius: 10px;
+        box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+        background-color: #fafafaff;
+        color: #ba59f9;
+    }
+
+    .inputbox {
+        position: relative;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: center;
+    }
+
+        .inputbox label {
+            position: absolute;
+            top: -10px;
+            left: 5px;
+            color: #000000;
+            font-size: 1em;
+            pointer-events: none;
+            transition: .2s;
+        }
+
+        .inputbox input {
+            width: 90%;
+            padding: 15px;
+            border: none;
+            border-bottom: 2px solid #dcdcdc;
+            outline: none;
+            border-radius: 15px;
+            font-size: 14px;
+            background-color: #f4eefb;
+            box-sizing: border-box;
+        }
+
+            .inputbox input:focus + label, .inputbox input:not(:placeholder-shown) + label {
+                bottom: 50px;
+                font-size: 14px;
+                color: #333;
+            }
+
+            .inputbox input:focus, .inputbox input:not(:placeholder-shown) {
+                border-bottom-color: #9a00c7;
+            }
+
+        .inputbox ion-icon {
+            position: absolute;
+            right: 35px;
+            color: #700079;
+            font-size: 1.2em;
+            top: 15px;
+        }
+
+    .login-button {
+        display: flex;
+        justify-content: center;
+    }
+
+    .button {
+        width: 45%;
+        height: 49px;
+        border-radius: 35px;
+        background-color: #5b43a7;
+        box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 17px;
+        font-weight: 500;
+        color: #ffffff;
+        transition: background-color 0.4s ease;
+    }
+
+        .button:hover {
+            background-color: #312952;
+        }
+
+    .forget {
+        margin: 10px 20px 30px;
+        font-size: .9em;
+        color: #000000;
+        display: flex;
+        justify-content: right;
+        margin-left: 10px;
+    }
+
+        .forget label input {
+            margin-right: 3px;
+        }
+
+        .forget label a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+            .forget label a:hover {
+                text-decoration: underline;
+            }
+
+</style>
+<main class="inside">
+    <div class="body">
+        <div class="login-box">
+            <span style="color: #4b2c58;font-family: Bahnschrift;font-weight: 900; font-size: 30px; display: flex; justify-content: center;">Login to HyperFyp</span>
+            @using (Html.BeginForm("Login", "Landing", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("ReturnUrl", Request.QueryString["ReturnUrl"])
+                <section>
+                    <div class="form-box">
+                        <br /><br />
+                        <form action="Verify" method="post">
+                            <div class="inputbox">
+                                @Html.EditorFor(model => model.loginuser, new { htmlAttributes = new { @class = "inputbox", @placeholder = "Username or E-mail Address", @name = "user", @id = "user", @required = "required", @type = "text" } })
+                            </div>
+                            <div class="inputbox">
+                                <ion-icon name="eye-off-outline" id="toggle-icon" style="cursor: pointer;" onclick="togglePasswordVisibility('password-field', 'toggle-icon')"></ion-icon>
+                                @Html.EditorFor(model => model.password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Password", @id = "myInput", @type = "password", @required = "required", @autocomplete = "on" } })
+                            </div>
+                            <div class="forget">
+                                <label>@Html.ActionLink("Forgot Password?", "forgot", "Landing")</label>
+                            </div>
+                            <div class="login-button">
+                                <button type="submit" class="button" id="post">Log In</button>
+                            </div>
+                            <div style="display: flex; justify-content: center; font-weight: 500; font-size: 15px; margin-top: 15px;">
+                                <p style="color: black">Don't have an account? <a style="color:blueviolet;" href="@Url.Action("register", "Landing")">Register now</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            }
+        </div>
+    </div>
+</main>
+<script>
+    function togglePasswordVisibility() {
+        var passwordField = document.getElementById("myInput");
+        var icon = document.getElementById("toggle-icon");
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            icon.setAttribute("name", "eye-outline");
+        } else {
+            passwordField.type = "password";
+            icon.setAttribute("name", "eye-off-outline");
+        }
+    }
+
+    window.onload = function () {
+        var errorAlert = document.getElementById('passwordMismatch');
+        var successAlert = document.getElementById('passwordMismatch2');
+
+        function hideNotification(notification) {
+            var container = notification.parentElement;
+            container.style.animation = 'slideOut 0.5s ease forwards';
+            container.addEventListener('animationend', function () {
+                container.style.display = 'none';
+            });
+        }
+
+        if (errorAlert) {
+            errorAlert.querySelector('.close').addEventListener('click', function () {
+                hideNotification(errorAlert);
+            });
+            setTimeout(function () {
+                hideNotification(errorAlert);
+            }, 4000);
+        } else if (successAlert) {
+            successAlert.querySelector('.close').addEventListener('click', function () {
+                hideNotification(successAlert);
+            });
+            setTimeout(function () {
+                hideNotification(successAlert);
+            }, 4000);
+        }
+    };
+</script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
